@@ -1,0 +1,633 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// AUTH & TENANCY
+// ============================================
+
+model Tenant {
+  id        String   @id @default(cuid())
+  subdomain String   @unique
+  name      String
+  createdAt DateTime @default(now())
+
+  users         User[]
+  contacts      Contact[]
+  companies     Company[]
+  manufacturers Manufacturer[]
+  products      Product[]
+  opportunities Opportunity[]
+  quotes        Quote[]
+  commissions   Commission[]
+  lineCards     LineCard[]
+  territories   Territory[]
+  activities    Activity[]
+  aliases       Alias[]
+  files         FileAttachment[]
+  reports       Report[]
+  importMappings ImportMapping[]
+  importLogs    ImportLog[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  email         String
+  name          String?
+  passwordHash  String?
+  role          UserRole @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+// ============================================
+// CORE CRM ENTITIES
+// ============================================
+
+model Contact {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  firstName String
+  lastName  String
+  email     String?
+  phone     String?
+  title     String?
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  opportunities Opportunity[]
+  quotes        Quote[]
+  activities    Activity[]
+  files         FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, companyId])
+}
+
+model Company {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  name     String
+  website  String?
+  phone    String?
+  address  String?
+  city     String?
+  state    String?
+  zip      String?
+  industry String?
+
+  contacts      Contact[]
+  opportunities Opportunity[]
+  quotes        Quote[]
+  commissions   Commission[]
+  activities    Activity[]
+  aliases       Alias[]
+  files         FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, name])
+}
+
+model Manufacturer {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  name           String
+  logo           String?
+  website        String?
+  primaryContact String?
+  phone          String?
+  email          String?
+  notes          String?
+
+  products        Product[]
+  lineCards       LineCard[]
+  opportunityMfrs OpportunityManufacturer[]
+  commissions     Commission[]
+  aliases         Alias[]
+  files           FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+model Product {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  manufacturerId String
+  manufacturer   Manufacturer @relation(fields: [manufacturerId], references: [id])
+
+  sku         String
+  name        String
+  description String?
+  unitPrice   Decimal? @db.Decimal(12, 2)
+  category    String?
+  isActive    Boolean  @default(true)
+
+  opportunityLines OpportunityLine[]
+  quoteLines       QuoteLine[]
+  aliases          Alias[]
+  files            FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, manufacturerId, sku])
+  @@index([tenantId])
+  @@index([tenantId, manufacturerId])
+}
+
+// ============================================
+// OPPORTUNITIES
+// ============================================
+
+model Opportunity {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  name              String
+  value             Decimal?  @db.Decimal(12, 2)
+  stage             String    @default("prospecting")
+  probability       Int?      @default(0)
+  expectedCloseDate DateTime?
+  actualCloseDate   DateTime?
+
+  companyId        String?
+  company          Company? @relation(fields: [companyId], references: [id])
+  primaryContactId String?
+  primaryContact   Contact? @relation(fields: [primaryContactId], references: [id])
+
+  manufacturers OpportunityManufacturer[]
+  lineItems     OpportunityLine[]
+  quotes        Quote[]
+  commissions   Commission[]
+  activities    Activity[]
+  files         FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, stage])
+  @@index([tenantId, companyId])
+}
+
+model OpportunityManufacturer {
+  id String @id @default(cuid())
+
+  opportunityId  String
+  opportunity    Opportunity  @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  manufacturerId String
+  manufacturer   Manufacturer @relation(fields: [manufacturerId], references: [id])
+
+  estimatedValue Decimal? @db.Decimal(12, 2)
+  notes          String?
+
+  @@unique([opportunityId, manufacturerId])
+  @@index([opportunityId])
+  @@index([manufacturerId])
+}
+
+model OpportunityLine {
+  id String @id @default(cuid())
+
+  opportunityId String
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product     @relation(fields: [productId], references: [id])
+
+  quantity  Int     @default(1)
+  unitPrice Decimal @db.Decimal(12, 2)
+  discount  Decimal? @db.Decimal(5, 2)
+  lineTotal Decimal @db.Decimal(12, 2)
+  notes     String?
+  sortOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([opportunityId])
+  @@index([productId])
+}
+
+// ============================================
+// QUOTES
+// ============================================
+
+model Quote {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  quoteNumber String
+  status      QuoteStatus @default(DRAFT)
+
+  opportunityId String?
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id])
+  companyId     String?
+  company       Company?     @relation(fields: [companyId], references: [id])
+  contactId     String?
+  contact       Contact?     @relation(fields: [contactId], references: [id])
+
+  validUntil DateTime?
+  subtotal   Decimal   @db.Decimal(12, 2) @default(0)
+  discount   Decimal?  @db.Decimal(12, 2)
+  tax        Decimal?  @db.Decimal(12, 2)
+  total      Decimal   @db.Decimal(12, 2) @default(0)
+  notes      String?
+  terms      String?
+
+  lineItems  QuoteLine[]
+  activities Activity[]
+  files      FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, quoteNumber])
+  @@index([tenantId])
+  @@index([tenantId, status])
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  VIEWED
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model QuoteLine {
+  id String @id @default(cuid())
+
+  quoteId   String
+  quote     Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  description String?
+  quantity    Int     @default(1)
+  unitPrice   Decimal @db.Decimal(12, 2)
+  discount    Decimal? @db.Decimal(5, 2)
+  lineTotal   Decimal @db.Decimal(12, 2)
+  sortOrder   Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([quoteId])
+}
+
+// ============================================
+// COMMISSIONS
+// ============================================
+
+model Commission {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  manufacturerId String
+  manufacturer   Manufacturer @relation(fields: [manufacturerId], references: [id])
+  opportunityId  String?
+  opportunity    Opportunity? @relation(fields: [opportunityId], references: [id])
+  companyId      String?
+  company        Company?     @relation(fields: [companyId], references: [id])
+
+  invoiceAmount    Decimal         @db.Decimal(12, 2)
+  commissionRate   Decimal         @db.Decimal(5, 2)
+  commissionAmount Decimal         @db.Decimal(12, 2)
+  status           CommissionStatus @default(PENDING)
+  invoiceDate      DateTime?
+  paidDate         DateTime?
+  notes            String?
+
+  files FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, status])
+  @@index([tenantId, manufacturerId])
+}
+
+enum CommissionStatus {
+  PENDING
+  INVOICED
+  PAID
+}
+
+// ============================================
+// LINE CARDS & TERRITORIES
+// ============================================
+
+model LineCard {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  manufacturerId String
+  manufacturer   Manufacturer @relation(fields: [manufacturerId], references: [id])
+  territoryId    String?
+  territory      Territory?   @relation(fields: [territoryId], references: [id])
+
+  status         LineCardStatus @default(ACTIVE)
+  startDate      DateTime?
+  endDate        DateTime?
+  commissionRate Decimal?       @db.Decimal(5, 2)
+  notes          String?
+  contractUrl    String?
+
+  files FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, manufacturerId])
+}
+
+enum LineCardStatus {
+  ACTIVE
+  PENDING
+  EXPIRED
+  TERMINATED
+}
+
+model Territory {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  name     String
+  states   String[]
+  zipCodes String[]
+
+  lineCards LineCard[]
+  files     FileAttachment[]
+
+  @@index([tenantId])
+}
+
+// ============================================
+// ACTIVITIES
+// ============================================
+
+model Activity {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  type        ActivityType
+  subject     String
+  description String?
+
+  contactId     String?
+  contact       Contact?     @relation(fields: [contactId], references: [id])
+  companyId     String?
+  company       Company?     @relation(fields: [companyId], references: [id])
+  opportunityId String?
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id])
+  quoteId       String?
+  quote         Quote?       @relation(fields: [quoteId], references: [id])
+
+  dueDate     DateTime?
+  completedAt DateTime?
+  duration    Int?
+  createdById String?
+
+  files FileAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, type])
+  @@index([tenantId, contactId])
+  @@index([tenantId, companyId])
+  @@index([tenantId, opportunityId])
+}
+
+enum ActivityType {
+  CALL
+  EMAIL
+  MEETING
+  NOTE
+  TASK
+}
+
+// ============================================
+// ALIASES
+// ============================================
+
+model Alias {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  type         AliasType
+  originalName String
+  aliasName    String
+
+  manufacturerId String?
+  manufacturer   Manufacturer? @relation(fields: [manufacturerId], references: [id])
+  productId      String?
+  product        Product?      @relation(fields: [productId], references: [id])
+  companyId      String?
+  company        Company?      @relation(fields: [companyId], references: [id])
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, type])
+  @@index([tenantId, aliasName])
+}
+
+enum AliasType {
+  MANUFACTURER
+  PRODUCT
+  COMPANY
+}
+
+// ============================================
+// FILE ATTACHMENTS
+// ============================================
+
+model FileAttachment {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  fileName String
+  fileType String
+  fileSize Int
+  url      String
+
+  contactId      String?
+  contact        Contact?      @relation(fields: [contactId], references: [id])
+  companyId      String?
+  company        Company?      @relation(fields: [companyId], references: [id])
+  manufacturerId String?
+  manufacturer   Manufacturer? @relation(fields: [manufacturerId], references: [id])
+  productId      String?
+  product        Product?      @relation(fields: [productId], references: [id])
+  opportunityId  String?
+  opportunity    Opportunity?  @relation(fields: [opportunityId], references: [id])
+  quoteId        String?
+  quote          Quote?        @relation(fields: [quoteId], references: [id])
+  commissionId   String?
+  commission     Commission?   @relation(fields: [commissionId], references: [id])
+  lineCardId     String?
+  lineCard       LineCard?     @relation(fields: [lineCardId], references: [id])
+  territoryId    String?
+  territory      Territory?    @relation(fields: [territoryId], references: [id])
+  activityId     String?
+  activity       Activity?     @relation(fields: [activityId], references: [id])
+
+  uploadedById String?
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+}
+
+// ============================================
+// REPORTS
+// ============================================
+
+model Report {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  name        String
+  type        ReportType
+  description String?
+  filters     Json?
+  columns     Json?
+  groupBy     String?
+  sortBy      String?
+  sortOrder   String?  @default("asc")
+
+  isScheduled Boolean   @default(false)
+  schedule    String?
+  recipients  String[]
+  lastRunAt   DateTime?
+  isShared    Boolean   @default(false)
+  createdById String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, type])
+}
+
+enum ReportType {
+  COMMISSION
+  OPPORTUNITY
+  PIPELINE
+  MANUFACTURER
+  ACTIVITY
+  PRODUCT
+  QUOTE
+  CUSTOM
+}
+
+// ============================================
+// IMPORT
+// ============================================
+
+model ImportMapping {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  name           String
+  entityType     ImportEntityType
+  columnMappings Json
+  options        Json?
+  lastUsedAt     DateTime?
+  useCount       Int              @default(0)
+  createdById    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, name, entityType])
+  @@index([tenantId])
+}
+
+model ImportLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  entityType     ImportEntityType
+  mappingId      String?
+  mappingName    String?
+  fileName       String
+  totalRows      Int
+  successCount   Int
+  errorCount     Int
+  errors         Json?
+  aliasesCreated Int?             @default(0)
+  importedById   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([tenantId, entityType])
+}
+
+enum ImportEntityType {
+  COMMISSION
+  CONTACT
+  COMPANY
+  OPPORTUNITY
+  PRODUCT
+  MANUFACTURER
+  QUOTE
+  ACTIVITY
+  ALIAS
+  LINE_CARD
+  TERRITORY
+}
