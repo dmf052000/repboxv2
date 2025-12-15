@@ -139,7 +139,7 @@ export function FileAttachments({ entityType, entityId, files: initialFiles }: F
                 <div className="flex items-center gap-2">
                   <Button
                     plain
-                    href={file.url}
+                    href={`/api/files/${file.id}/download`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

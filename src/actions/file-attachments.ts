@@ -64,9 +64,10 @@ export async function deleteFileAttachment(id: string, entityType: string, entit
     throw new Error('File attachment not found')
   }
 
-  // Extract key from URL (assuming S3 URL format)
-  const urlParts = fileAttachment.url.split('/')
-  const key = urlParts.slice(3).join('/') // Remove https://bucket.s3.region.amazonaws.com/
+  // Extract S3 key from URL
+  // URL format: https://bucket.s3.region.amazonaws.com/key
+  const urlObj = new URL(fileAttachment.url)
+  const key = urlObj.pathname.substring(1) // Remove leading slash
 
   // Delete from S3
   try {

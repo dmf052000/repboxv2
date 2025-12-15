@@ -33,8 +33,9 @@ Go to: **Project Settings → Environment Variables**
 ### Required (Production)
 
 ```bash
-# Database
-DATABASE_URL="postgresql://user:pass@host.neon.tech/db?sslmode=require"
+# Database - MUST use pooler connection string (has -pooler in hostname)
+DATABASE_URL="postgresql://user:pass@host-pooler.region.aws.neon.tech/db?sslmode=require"
+# ⚠️ Get this from Neon Dashboard → Connection Details → Connection Pooling tab
 
 # Auth (generate secret: openssl rand -base64 32)
 AUTH_SECRET="your-generated-secret-here"
