@@ -6,6 +6,7 @@ import { aliasSchema, type AliasInput } from '@/lib/validations/alias'
 import { createAlias, updateAlias } from '@/actions/aliases'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { Textarea } from '@/components/ui/textarea'
 import { useRouter } from 'next/navigation'
@@ -67,14 +68,11 @@ export function AliasForm({
 
         <Field>
           <Label>Type *</Label>
-          <select
-            {...form.register('type')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-          >
+          <Select {...form.register('type')}>
             <option value="MANUFACTURER">Manufacturer</option>
             <option value="PRODUCT">Product</option>
             <option value="COMPANY">Company</option>
-          </select>
+          </Select>
         </Field>
 
         <Field>
@@ -102,51 +100,42 @@ export function AliasForm({
         {selectedType === 'MANUFACTURER' && manufacturers.length > 0 && (
           <Field>
             <Label>Link to Manufacturer</Label>
-            <select
-              {...form.register('manufacturerId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('manufacturerId')}>
               <option value="">Select a manufacturer (optional)</option>
               {manufacturers.map((manufacturer) => (
                 <option key={manufacturer.id} value={manufacturer.id}>
                   {manufacturer.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {selectedType === 'PRODUCT' && products.length > 0 && (
           <Field>
             <Label>Link to Product</Label>
-            <select
-              {...form.register('productId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('productId')}>
               <option value="">Select a product (optional)</option>
               {products.map((product) => (
                 <option key={product.id} value={product.id}>
                   {product.name} ({product.manufacturer.name})
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {selectedType === 'COMPANY' && companies.length > 0 && (
           <Field>
             <Label>Link to Company</Label>
-            <select
-              {...form.register('companyId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('companyId')}>
               <option value="">Select a company (optional)</option>
               {companies.map((company) => (
                 <option key={company.id} value={company.id}>
                   {company.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 

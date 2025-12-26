@@ -6,6 +6,7 @@ import { opportunitySchema, type OpportunityInput } from '@/lib/validations/oppo
 import { createOpportunity, updateOpportunity } from '@/actions/opportunities'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { Textarea } from '@/components/ui/textarea'
 import { useRouter } from 'next/navigation'
@@ -102,17 +103,14 @@ export function OpportunityForm({ opportunity, companies = [], contacts = [] }: 
 
         <Field>
           <Label>Stage</Label>
-          <select
-            {...form.register('stage')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-          >
+          <Select {...form.register('stage')}>
             <option value="prospecting">Prospecting</option>
             <option value="qualification">Qualification</option>
             <option value="proposal">Proposal</option>
             <option value="negotiation">Negotiation</option>
             <option value="closed-won">Closed Won</option>
             <option value="closed-lost">Closed Lost</option>
-          </select>
+          </Select>
         </Field>
 
         <Field>
@@ -126,26 +124,22 @@ export function OpportunityForm({ opportunity, companies = [], contacts = [] }: 
         {companies.length > 0 && (
           <Field>
             <Label>Company</Label>
-            <select
-              {...form.register('companyId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('companyId')}>
               <option value="">Select a company</option>
               {companies.map((company) => (
                 <option key={company.id} value={company.id}>
                   {company.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {contacts.length > 0 && (
           <Field>
             <Label>Primary Contact</Label>
-            <select
+            <Select
               {...form.register('primaryContactId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
               disabled={!selectedCompanyId && filteredContacts.length === 0}
             >
               <option value="">Select a contact</option>
@@ -154,7 +148,7 @@ export function OpportunityForm({ opportunity, companies = [], contacts = [] }: 
                   {contact.firstName} {contact.lastName}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 

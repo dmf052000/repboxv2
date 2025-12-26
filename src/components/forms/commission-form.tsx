@@ -6,6 +6,7 @@ import { commissionSchema, type CommissionInput } from '@/lib/validations/commis
 import { createCommission, updateCommission } from '@/actions/commissions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { Textarea } from '@/components/ui/textarea'
 import { useRouter } from 'next/navigation'
@@ -93,9 +94,8 @@ export function CommissionForm({
 
         <Field>
           <Label>Manufacturer *</Label>
-          <select
+          <Select
             {...form.register('manufacturerId')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
             data-invalid={!!form.formState.errors.manufacturerId}
           >
             <option value="">Select a manufacturer</option>
@@ -104,7 +104,7 @@ export function CommissionForm({
                 {manufacturer.name}
               </option>
             ))}
-          </select>
+          </Select>
           {form.formState.errors.manufacturerId && (
             <ErrorMessage>{form.formState.errors.manufacturerId.message}</ErrorMessage>
           )}
@@ -113,34 +113,28 @@ export function CommissionForm({
         {opportunities.length > 0 && (
           <Field>
             <Label>Opportunity</Label>
-            <select
-              {...form.register('opportunityId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('opportunityId')}>
               <option value="">Select an opportunity</option>
               {opportunities.map((opportunity) => (
                 <option key={opportunity.id} value={opportunity.id}>
                   {opportunity.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {companies.length > 0 && (
           <Field>
             <Label>Company</Label>
-            <select
-              {...form.register('companyId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('companyId')}>
               <option value="">Select a company</option>
               {companies.map((company) => (
                 <option key={company.id} value={company.id}>
                   {company.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
@@ -188,14 +182,11 @@ export function CommissionForm({
 
         <Field>
           <Label>Status</Label>
-          <select
-            {...form.register('status')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-          >
+          <Select {...form.register('status')}>
             <option value="PENDING">Pending</option>
             <option value="INVOICED">Invoiced</option>
             <option value="PAID">Paid</option>
-          </select>
+          </Select>
         </Field>
 
         <div className="grid grid-cols-2 gap-4">

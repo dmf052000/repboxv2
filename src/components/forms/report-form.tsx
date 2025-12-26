@@ -6,6 +6,7 @@ import { reportSchema, type ReportInput } from '@/lib/validations/report'
 import { createReport, updateReport } from '@/actions/reports'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -76,10 +77,7 @@ export function ReportForm({ report }: ReportFormProps) {
 
         <Field>
           <Label>Report Type *</Label>
-          <select
-            {...form.register('type')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-          >
+          <Select {...form.register('type')}>
             <option value="COMMISSION">Commission</option>
             <option value="OPPORTUNITY">Opportunity</option>
             <option value="PIPELINE">Pipeline</option>
@@ -88,7 +86,7 @@ export function ReportForm({ report }: ReportFormProps) {
             <option value="PRODUCT">Product</option>
             <option value="QUOTE">Quote</option>
             <option value="CUSTOM">Custom</option>
-          </select>
+          </Select>
         </Field>
 
         <Field>
@@ -110,13 +108,10 @@ export function ReportForm({ report }: ReportFormProps) {
 
           <Field>
             <Label>Sort Order</Label>
-            <select
-              {...form.register('sortOrder')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('sortOrder')}>
               <option value="asc">Ascending</option>
               <option value="desc">Descending</option>
-            </select>
+            </Select>
           </Field>
         </div>
 

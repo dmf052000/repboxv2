@@ -2,12 +2,13 @@ import { getReport, runReport } from '@/actions/reports'
 import { notFound } from 'next/navigation'
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@/components/ui/description-list'
 import { Button } from '@/components/ui/button'
-import { Heading } from '@/components/ui/heading'
+import { Heading, Subheading } from '@/components/ui/heading'
 import { Text } from '@/components/ui/text'
 import { Badge } from '@/components/ui/badge'
+import { Divider } from '@/components/ui/divider'
 
 const typeColors: Record<string, string> = {
-  COMMISSION: 'green',
+  COMMISSION: 'lime',
   OPPORTUNITY: 'blue',
   PIPELINE: 'indigo',
   MANUFACTURER: 'purple',
@@ -30,8 +31,8 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
+    <>
+      <div className="flex items-end justify-between gap-4">
         <div>
           <Heading>{report.name}</Heading>
           <div className="mt-2">
@@ -42,57 +43,56 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
         </div>
         <div className="flex gap-3">
           <form action={handleRunReport}>
-            <Button type="submit">Run Report</Button>
+            <Button type="submit" outline>
+              Run Report
+            </Button>
           </form>
-          <Button href={`/reports/${report.id}/edit`}>Edit</Button>
-          <Button plain href="/reports">
-            Back to Reports
+          <Button className="-my-0.5" href={`/reports/${report.id}/edit`}>
+            Edit
           </Button>
         </div>
       </div>
 
-      <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900 mb-8">
-        <DescriptionList>
-          <DescriptionTerm>Report Name</DescriptionTerm>
-          <DescriptionDetails>{report.name}</DescriptionDetails>
+      <DescriptionList className="mt-10">
+        <DescriptionTerm>Report name</DescriptionTerm>
+        <DescriptionDetails>{report.name}</DescriptionDetails>
 
-          <DescriptionTerm>Type</DescriptionTerm>
-          <DescriptionDetails>
-            <Badge color={typeColors[report.type] as any}>
-              {report.type}
-            </Badge>
-          </DescriptionDetails>
+        <DescriptionTerm>Type</DescriptionTerm>
+        <DescriptionDetails>
+          <Badge color={typeColors[report.type] as any}>
+            {report.type}
+          </Badge>
+        </DescriptionDetails>
 
-          {report.description && (
-            <>
-              <DescriptionTerm>Description</DescriptionTerm>
-              <DescriptionDetails>{report.description}</DescriptionDetails>
-            </>
-          )}
+        {report.description && (
+          <>
+            <DescriptionTerm>Description</DescriptionTerm>
+            <DescriptionDetails>{report.description}</DescriptionDetails>
+          </>
+        )}
 
-          {report.lastRunAt && (
-            <>
-              <DescriptionTerm>Last Run</DescriptionTerm>
-              <DescriptionDetails>
-                {new Date(report.lastRunAt).toLocaleString()}
-              </DescriptionDetails>
-            </>
-          )}
+        {report.lastRunAt && (
+          <>
+            <DescriptionTerm>Last run</DescriptionTerm>
+            <DescriptionDetails>
+              {new Date(report.lastRunAt).toLocaleString()}
+            </DescriptionDetails>
+          </>
+        )}
 
-          {report.isScheduled && (
-            <>
-              <DescriptionTerm>Scheduled</DescriptionTerm>
-              <DescriptionDetails>Yes - {report.schedule}</DescriptionDetails>
-            </>
-          )}
-        </DescriptionList>
-      </div>
+        {report.isScheduled && (
+          <>
+            <DescriptionTerm>Scheduled</DescriptionTerm>
+            <DescriptionDetails>Yes - {report.schedule}</DescriptionDetails>
+          </>
+        )}
+      </DescriptionList>
 
-      <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-        <Heading level={2}>Report Results</Heading>
-        <Text className="mt-2 text-zinc-500">Click "Run Report" to generate results.</Text>
-      </div>
-    </div>
+      <Divider className="my-10" soft />
+
+      <Subheading>Report results</Subheading>
+      <Text className="mt-2 text-zinc-500">Click "Run Report" to generate results.</Text>
+    </>
   )
 }
 

@@ -2,11 +2,19 @@ import { getOpportunity } from '@/actions/opportunities'
 import { notFound } from 'next/navigation'
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@/components/ui/description-list'
 import { Button } from '@/components/ui/button'
-import { Heading } from '@/components/ui/heading'
+import { Heading, Subheading } from '@/components/ui/heading'
 import { Text } from '@/components/ui/text'
 import { Link } from '@/components/ui/link'
 import { Badge } from '@/components/ui/badge'
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
+import { Divider } from '@/components/ui/divider'
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeader,
+} from '@/components/ui/table'
 import { ActivityTimeline } from '@/components/features/activity-timeline'
 import { FileAttachments } from '@/components/features/file-attachments'
 import { getFileAttachments } from '@/actions/file-attachments'
@@ -16,8 +24,8 @@ const stageColors: Record<string, string> = {
   qualification: 'blue',
   proposal: 'indigo',
   negotiation: 'purple',
-  'closed-won': 'green',
-  'closed-lost': 'red',
+  'closed-won': 'lime',
+  'closed-lost': 'pink',
 }
 
 const stageLabels: Record<string, string> = {
@@ -38,8 +46,8 @@ export default async function OpportunityDetailPage({ params }: { params: { id: 
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
+    <>
+      <div className="flex items-end justify-between gap-4">
         <div>
           <Heading>{opportunity.name}</Heading>
           <div className="mt-2 flex items-center gap-2">
@@ -51,135 +59,123 @@ export default async function OpportunityDetailPage({ params }: { params: { id: 
             )}
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button href={`/opportunities/${opportunity.id}/edit`}>Edit</Button>
-          <Button plain href="/opportunities">
-            Back to Opportunities
-          </Button>
-        </div>
+        <Button className="-my-0.5" href={`/opportunities/${opportunity.id}/edit`}>
+          Edit
+        </Button>
       </div>
 
-      <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900 mb-8">
-        <DescriptionList>
-          <DescriptionTerm>Opportunity Name</DescriptionTerm>
-          <DescriptionDetails>{opportunity.name}</DescriptionDetails>
+      <DescriptionList className="mt-10">
+        <DescriptionTerm>Opportunity name</DescriptionTerm>
+        <DescriptionDetails>{opportunity.name}</DescriptionDetails>
 
-          {opportunity.value && (
-            <>
-              <DescriptionTerm>Value</DescriptionTerm>
-              <DescriptionDetails>${opportunity.value.toLocaleString()}</DescriptionDetails>
-            </>
-          )}
+        {opportunity.value && (
+          <>
+            <DescriptionTerm>Value</DescriptionTerm>
+            <DescriptionDetails>${opportunity.value.toLocaleString()}</DescriptionDetails>
+          </>
+        )}
 
-          <DescriptionTerm>Stage</DescriptionTerm>
-          <DescriptionDetails>
-            <Badge color={stageColors[opportunity.stage] as any}>
-              {stageLabels[opportunity.stage]}
-            </Badge>
-          </DescriptionDetails>
+        <DescriptionTerm>Stage</DescriptionTerm>
+        <DescriptionDetails>
+          <Badge color={stageColors[opportunity.stage] as any}>
+            {stageLabels[opportunity.stage]}
+          </Badge>
+        </DescriptionDetails>
 
-          {opportunity.probability && (
-            <>
-              <DescriptionTerm>Probability</DescriptionTerm>
-              <DescriptionDetails>{opportunity.probability}%</DescriptionDetails>
-            </>
-          )}
+        {opportunity.probability && (
+          <>
+            <DescriptionTerm>Probability</DescriptionTerm>
+            <DescriptionDetails>{opportunity.probability}%</DescriptionDetails>
+          </>
+        )}
 
-          {opportunity.expectedCloseDate && (
-            <>
-              <DescriptionTerm>Expected Close Date</DescriptionTerm>
-              <DescriptionDetails>
-                {new Date(opportunity.expectedCloseDate).toLocaleDateString()}
-              </DescriptionDetails>
-            </>
-          )}
+        {opportunity.expectedCloseDate && (
+          <>
+            <DescriptionTerm>Expected close date</DescriptionTerm>
+            <DescriptionDetails>
+              {new Date(opportunity.expectedCloseDate).toLocaleDateString()}
+            </DescriptionDetails>
+          </>
+        )}
 
-          {opportunity.company && (
-            <>
-              <DescriptionTerm>Company</DescriptionTerm>
-              <DescriptionDetails>
-                <Link href={`/companies/${opportunity.company.id}`}>
-                  {opportunity.company.name}
-                </Link>
-              </DescriptionDetails>
-            </>
-          )}
+        {opportunity.company && (
+          <>
+            <DescriptionTerm>Company</DescriptionTerm>
+            <DescriptionDetails>
+              <Link href={`/companies/${opportunity.company.id}`}>
+                {opportunity.company.name}
+              </Link>
+            </DescriptionDetails>
+          </>
+        )}
 
-          {opportunity.primaryContact && (
-            <>
-              <DescriptionTerm>Primary Contact</DescriptionTerm>
-              <DescriptionDetails>
-                <Link href={`/contacts/${opportunity.primaryContact.id}`}>
-                  {opportunity.primaryContact.firstName} {opportunity.primaryContact.lastName}
-                </Link>
-              </DescriptionDetails>
-            </>
-          )}
+        {opportunity.primaryContact && (
+          <>
+            <DescriptionTerm>Primary contact</DescriptionTerm>
+            <DescriptionDetails>
+              <Link href={`/contacts/${opportunity.primaryContact.id}`}>
+                {opportunity.primaryContact.firstName} {opportunity.primaryContact.lastName}
+              </Link>
+            </DescriptionDetails>
+          </>
+        )}
+      </DescriptionList>
 
-        </DescriptionList>
-      </div>
-
-      {/* Products Section */}
       {opportunity.lineItems.length > 0 && (
-        <div className="mb-8">
-          <Heading level={2}>Products ({opportunity.lineItems.length})</Heading>
-          <div className="mt-4 rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Product</TableCell>
-                  <TableCell>Manufacturer</TableCell>
-                  <TableCell>Quantity</TableCell>
-                  <TableCell>Unit Price</TableCell>
-                  <TableCell>Total</TableCell>
+        <>
+          <Divider className="my-10" soft />
+          <Subheading>Products</Subheading>
+          <Table className="mt-4 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
+            <TableHead>
+              <TableRow>
+                <TableHeader>Product</TableHeader>
+                <TableHeader>Manufacturer</TableHeader>
+                <TableHeader>Quantity</TableHeader>
+                <TableHeader>Unit price</TableHeader>
+                <TableHeader>Total</TableHeader>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {opportunity.lineItems.map((line) => (
+                <TableRow
+                  key={line.id}
+                  href={`/products/${line.product.id}`}
+                  title={line.product.name}
+                >
+                  <TableCell className="font-medium">{line.product.name}</TableCell>
+                  <TableCell className="text-zinc-500">{line.product.manufacturer.name}</TableCell>
+                  <TableCell className="text-zinc-500">{line.quantity}</TableCell>
+                  <TableCell className="text-zinc-500">
+                    {line.unitPrice ? `$${Number(line.unitPrice).toFixed(2)}` : '-'}
+                  </TableCell>
+                  <TableCell className="text-zinc-500">
+                    {line.quantity && line.unitPrice
+                      ? `$${(line.quantity * Number(line.unitPrice)).toFixed(2)}`
+                      : '-'}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {opportunity.lineItems.map((line) => (
-                  <TableRow key={line.id}>
-                    <TableCell>
-                      <Link href={`/products/${line.product.id}`}>
-                        {line.product.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{line.product.manufacturer.name}</TableCell>
-                    <TableCell>{line.quantity}</TableCell>
-                    <TableCell>
-                      {line.unitPrice ? `$${Number(line.unitPrice).toFixed(2)}` : '-'}
-                    </TableCell>
-                    <TableCell>
-                      {line.quantity && line.unitPrice
-                        ? `$${(line.quantity * Number(line.unitPrice)).toFixed(2)}`
-                        : '-'}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+              ))}
+            </TableBody>
+          </Table>
+        </>
       )}
 
-      {/* Placeholder for quotes - will be added */}
-      <div className="mb-8">
-        <Heading level={2}>Quotes</Heading>
-        <Text className="mt-2 text-zinc-500">Quotes will be shown here</Text>
-      </div>
+      <Divider className="my-10" soft />
 
-      {/* File Attachments */}
-      <div className="mt-8">
-        <FileAttachments entityType="opportunity" entityId={opportunity.id} files={files} />
-      </div>
+      <FileAttachments entityType="opportunity" entityId={opportunity.id} files={files} />
 
-      {/* Activities Timeline */}
-      <div className="mt-8">
-        <div className="flex items-center justify-between mb-4">
-          <Heading level={2}>Activities</Heading>
-          <Button href={`/activities/new?opportunityId=${opportunity.id}`}>Log Activity</Button>
-        </div>
+      <Divider className="my-10" soft />
+
+      <section className="flex items-end justify-between gap-4">
+        <Subheading>Activities</Subheading>
+        <Button className="-my-0.5" href={`/activities/new?opportunityId=${opportunity.id}`}>
+          Log Activity
+        </Button>
+      </section>
+      <div className="mt-4">
         <ActivityTimeline type="opportunity" id={opportunity.id} />
       </div>
-    </div>
+    </>
   )
 }
 

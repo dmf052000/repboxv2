@@ -6,6 +6,7 @@ import { quoteSchema, type QuoteInput } from '@/lib/validations/quote'
 import { createQuote, updateQuote } from '@/actions/quotes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { Textarea } from '@/components/ui/textarea'
 import { useRouter } from 'next/navigation'
@@ -85,17 +86,14 @@ export function QuoteForm({ quote, opportunities = [], companies = [], contacts 
 
         <Field>
           <Label>Status</Label>
-          <select
-            {...form.register('status')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-          >
+          <Select {...form.register('status')}>
             <option value="DRAFT">Draft</option>
             <option value="SENT">Sent</option>
             <option value="VIEWED">Viewed</option>
             <option value="ACCEPTED">Accepted</option>
             <option value="REJECTED">Rejected</option>
             <option value="EXPIRED">Expired</option>
-          </select>
+          </Select>
         </Field>
 
         <Field>
@@ -109,43 +107,36 @@ export function QuoteForm({ quote, opportunities = [], companies = [], contacts 
         {opportunities.length > 0 && (
           <Field>
             <Label>Opportunity</Label>
-            <select
-              {...form.register('opportunityId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('opportunityId')}>
               <option value="">Select an opportunity</option>
               {opportunities.map((opportunity) => (
                 <option key={opportunity.id} value={opportunity.id}>
                   {opportunity.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {companies.length > 0 && (
           <Field>
             <Label>Company</Label>
-            <select
-              {...form.register('companyId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('companyId')}>
               <option value="">Select a company</option>
               {companies.map((company) => (
                 <option key={company.id} value={company.id}>
                   {company.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {contacts.length > 0 && (
           <Field>
             <Label>Contact</Label>
-            <select
+            <Select
               {...form.register('contactId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
               disabled={!selectedCompanyId && filteredContacts.length === 0}
             >
               <option value="">Select a contact</option>
@@ -154,7 +145,7 @@ export function QuoteForm({ quote, opportunities = [], companies = [], contacts 
                   {contact.firstName} {contact.lastName}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 

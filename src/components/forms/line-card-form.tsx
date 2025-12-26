@@ -6,6 +6,7 @@ import { lineCardSchema, type LineCardInput } from '@/lib/validations/line-card'
 import { createLineCard, updateLineCard } from '@/actions/line-cards'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { Textarea } from '@/components/ui/textarea'
 import { useRouter } from 'next/navigation'
@@ -73,9 +74,8 @@ export function LineCardForm({ lineCard, manufacturers, territories }: LineCardF
 
         <Field>
           <Label>Manufacturer *</Label>
-          <select
+          <Select
             {...form.register('manufacturerId')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
             data-invalid={!!form.formState.errors.manufacturerId}
           >
             <option value="">Select a manufacturer</option>
@@ -84,7 +84,7 @@ export function LineCardForm({ lineCard, manufacturers, territories }: LineCardF
                 {manufacturer.name}
               </option>
             ))}
-          </select>
+          </Select>
           {form.formState.errors.manufacturerId && (
             <ErrorMessage>{form.formState.errors.manufacturerId.message}</ErrorMessage>
           )}
@@ -93,31 +93,25 @@ export function LineCardForm({ lineCard, manufacturers, territories }: LineCardF
         {territories.length > 0 && (
           <Field>
             <Label>Territory</Label>
-            <select
-              {...form.register('territoryId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('territoryId')}>
               <option value="">Select a territory</option>
               {territories.map((territory) => (
                 <option key={territory.id} value={territory.id}>
                   {territory.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         <Field>
           <Label>Status</Label>
-          <select
-            {...form.register('status')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-          >
+          <Select {...form.register('status')}>
             <option value="ACTIVE">Active</option>
             <option value="PENDING">Pending</option>
             <option value="EXPIRED">Expired</option>
             <option value="TERMINATED">Terminated</option>
-          </select>
+          </Select>
         </Field>
 
         <div className="grid grid-cols-2 gap-4">

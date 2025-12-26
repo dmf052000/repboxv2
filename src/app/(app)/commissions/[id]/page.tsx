@@ -3,14 +3,13 @@ import { notFound } from 'next/navigation'
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@/components/ui/description-list'
 import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
-import { Text } from '@/components/ui/text'
 import { Link } from '@/components/ui/link'
 import { Badge } from '@/components/ui/badge'
 
 const statusColors: Record<string, string> = {
   PENDING: 'blue',
   INVOICED: 'indigo',
-  PAID: 'green',
+  PAID: 'lime',
 }
 
 export default async function CommissionDetailPage({ params }: { params: { id: string } }) {
@@ -21,8 +20,8 @@ export default async function CommissionDetailPage({ params }: { params: { id: s
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
+    <>
+      <div className="flex items-end justify-between gap-4">
         <div>
           <Heading>Commission</Heading>
           <div className="mt-2">
@@ -31,16 +30,12 @@ export default async function CommissionDetailPage({ params }: { params: { id: s
             </Badge>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button href={`/commissions/${commission.id}/edit`}>Edit</Button>
-          <Button plain href="/commissions">
-            Back to Commissions
-          </Button>
-        </div>
+        <Button className="-my-0.5" href={`/commissions/${commission.id}/edit`}>
+          Edit
+        </Button>
       </div>
 
-      <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-        <DescriptionList>
+      <DescriptionList className="mt-10">
           <DescriptionTerm>Manufacturer</DescriptionTerm>
           <DescriptionDetails>
             <Link href={`/manufacturers/${commission.manufacturer.id}`}>
@@ -123,8 +118,7 @@ export default async function CommissionDetailPage({ params }: { params: { id: s
             </>
           )}
         </DescriptionList>
-      </div>
-    </div>
+    </>
   )
 }
 

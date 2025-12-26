@@ -6,6 +6,7 @@ import { contactSchema, type ContactInput } from '@/lib/validations/contact'
 import { createContact, updateContact } from '@/actions/contacts'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -106,17 +107,14 @@ export function ContactForm({ contact, companies = [] }: ContactFormProps) {
         {companies.length > 0 && (
           <Field>
             <Label>Company</Label>
-            <select
-              {...form.register('companyId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('companyId')}>
               <option value="">Select a company</option>
               {companies.map((company) => (
                 <option key={company.id} value={company.id}>
                   {company.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 

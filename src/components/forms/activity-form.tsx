@@ -6,6 +6,7 @@ import { activitySchema, type ActivityInput } from '@/lib/validations/activity'
 import { createActivity, updateActivity } from '@/actions/activities'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { Textarea } from '@/components/ui/textarea'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -97,16 +98,13 @@ export function ActivityForm({
 
         <Field>
           <Label>Type *</Label>
-          <select
-            {...form.register('type')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-          >
+          <Select {...form.register('type')}>
             <option value="CALL">Call</option>
             <option value="EMAIL">Email</option>
             <option value="MEETING">Meeting</option>
             <option value="NOTE">Note</option>
             <option value="TASK">Task</option>
-          </select>
+          </Select>
         </Field>
 
         <Field>
@@ -131,68 +129,56 @@ export function ActivityForm({
         {contacts.length > 0 && (
           <Field>
             <Label>Contact</Label>
-            <select
-              {...form.register('contactId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('contactId')}>
               <option value="">Select a contact (optional)</option>
               {contacts.map((contact) => (
                 <option key={contact.id} value={contact.id}>
                   {contact.firstName} {contact.lastName}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {companies.length > 0 && (
           <Field>
             <Label>Company</Label>
-            <select
-              {...form.register('companyId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('companyId')}>
               <option value="">Select a company (optional)</option>
               {companies.map((company) => (
                 <option key={company.id} value={company.id}>
                   {company.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {opportunities.length > 0 && (
           <Field>
             <Label>Opportunity</Label>
-            <select
-              {...form.register('opportunityId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('opportunityId')}>
               <option value="">Select an opportunity (optional)</option>
               {opportunities.map((opportunity) => (
                 <option key={opportunity.id} value={opportunity.id}>
                   {opportunity.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 
         {quotes.length > 0 && (
           <Field>
             <Label>Quote</Label>
-            <select
-              {...form.register('quoteId')}
-              className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
-            >
+            <Select {...form.register('quoteId')}>
               <option value="">Select a quote (optional)</option>
               {quotes.map((quote) => (
                 <option key={quote.id} value={quote.id}>
                   {quote.quoteNumber}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
 

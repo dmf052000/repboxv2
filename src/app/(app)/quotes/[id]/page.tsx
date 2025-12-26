@@ -2,11 +2,19 @@ import { getQuote } from '@/actions/quotes'
 import { notFound } from 'next/navigation'
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@/components/ui/description-list'
 import { Button } from '@/components/ui/button'
-import { Heading } from '@/components/ui/heading'
+import { Heading, Subheading } from '@/components/ui/heading'
 import { Text } from '@/components/ui/text'
 import { Link } from '@/components/ui/link'
 import { Badge } from '@/components/ui/badge'
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
+import { Divider } from '@/components/ui/divider'
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeader,
+} from '@/components/ui/table'
 import { ActivityTimeline } from '@/components/features/activity-timeline'
 import { FileAttachments } from '@/components/features/file-attachments'
 import { getFileAttachments } from '@/actions/file-attachments'
@@ -15,8 +23,8 @@ const statusColors: Record<string, string> = {
   DRAFT: 'zinc',
   SENT: 'blue',
   VIEWED: 'indigo',
-  ACCEPTED: 'green',
-  REJECTED: 'red',
+  ACCEPTED: 'lime',
+  REJECTED: 'pink',
   EXPIRED: 'orange',
 }
 
@@ -38,181 +46,180 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
+    <>
+      <div className="flex items-end justify-between gap-4">
         <div>
           <Heading>Quote {quote.quoteNumber}</Heading>
-          <div className="mt-2 flex items-center gap-2">
+          <div className="mt-2">
             <Badge color={statusColors[quote.status] as any}>
               {statusLabels[quote.status]}
             </Badge>
           </div>
         </div>
         <div className="flex gap-3">
-          <Button href={`/quotes/${quote.id}/edit`}>Edit</Button>
-          <Button href={`/api/quotes/${quote.id}/pdf`} target="_blank">
+          <Button outline href={`/api/quotes/${quote.id}/pdf`} target="_blank">
             Download PDF
           </Button>
-          <Button plain href="/quotes">
-            Back to Quotes
+          <Button className="-my-0.5" href={`/quotes/${quote.id}/edit`}>
+            Edit
           </Button>
         </div>
       </div>
 
-      <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900 mb-8">
-        <DescriptionList>
-          <DescriptionTerm>Quote Number</DescriptionTerm>
-          <DescriptionDetails>{quote.quoteNumber}</DescriptionDetails>
+      <DescriptionList className="mt-10">
+        <DescriptionTerm>Quote number</DescriptionTerm>
+        <DescriptionDetails>{quote.quoteNumber}</DescriptionDetails>
 
-          <DescriptionTerm>Status</DescriptionTerm>
-          <DescriptionDetails>
-            <Badge color={statusColors[quote.status] as any}>
-              {statusLabels[quote.status]}
-            </Badge>
-          </DescriptionDetails>
+        <DescriptionTerm>Status</DescriptionTerm>
+        <DescriptionDetails>
+          <Badge color={statusColors[quote.status] as any}>
+            {statusLabels[quote.status]}
+          </Badge>
+        </DescriptionDetails>
 
-          {quote.opportunity && (
-            <>
-              <DescriptionTerm>Opportunity</DescriptionTerm>
-              <DescriptionDetails>
-                <Link href={`/opportunities/${quote.opportunity.id}`}>
-                  {quote.opportunity.name}
-                </Link>
-              </DescriptionDetails>
-            </>
-          )}
+        {quote.opportunity && (
+          <>
+            <DescriptionTerm>Opportunity</DescriptionTerm>
+            <DescriptionDetails>
+              <Link href={`/opportunities/${quote.opportunity.id}`}>
+                {quote.opportunity.name}
+              </Link>
+            </DescriptionDetails>
+          </>
+        )}
 
-          {quote.company && (
-            <>
-              <DescriptionTerm>Company</DescriptionTerm>
-              <DescriptionDetails>
-                <Link href={`/companies/${quote.company.id}`}>
-                  {quote.company.name}
-                </Link>
-              </DescriptionDetails>
-            </>
-          )}
+        {quote.company && (
+          <>
+            <DescriptionTerm>Company</DescriptionTerm>
+            <DescriptionDetails>
+              <Link href={`/companies/${quote.company.id}`}>
+                {quote.company.name}
+              </Link>
+            </DescriptionDetails>
+          </>
+        )}
 
-          {quote.contact && (
-            <>
-              <DescriptionTerm>Contact</DescriptionTerm>
-              <DescriptionDetails>
-                <Link href={`/contacts/${quote.contact.id}`}>
-                  {quote.contact.firstName} {quote.contact.lastName}
-                </Link>
-              </DescriptionDetails>
-            </>
-          )}
+        {quote.contact && (
+          <>
+            <DescriptionTerm>Contact</DescriptionTerm>
+            <DescriptionDetails>
+              <Link href={`/contacts/${quote.contact.id}`}>
+                {quote.contact.firstName} {quote.contact.lastName}
+              </Link>
+            </DescriptionDetails>
+          </>
+        )}
 
-          {quote.validUntil && (
-            <>
-              <DescriptionTerm>Valid Until</DescriptionTerm>
-              <DescriptionDetails>
-                {new Date(quote.validUntil).toLocaleDateString()}
-              </DescriptionDetails>
-            </>
-          )}
+        {quote.validUntil && (
+          <>
+            <DescriptionTerm>Valid until</DescriptionTerm>
+            <DescriptionDetails>
+              {new Date(quote.validUntil).toLocaleDateString()}
+            </DescriptionDetails>
+          </>
+        )}
 
-          {quote.notes && (
-            <>
-              <DescriptionTerm>Notes</DescriptionTerm>
-              <DescriptionDetails className="whitespace-pre-wrap">{quote.notes}</DescriptionDetails>
-            </>
-          )}
+        {quote.notes && (
+          <>
+            <DescriptionTerm>Notes</DescriptionTerm>
+            <DescriptionDetails className="whitespace-pre-wrap">{quote.notes}</DescriptionDetails>
+          </>
+        )}
 
-          {quote.terms && (
-            <>
-              <DescriptionTerm>Terms & Conditions</DescriptionTerm>
-              <DescriptionDetails className="whitespace-pre-wrap">{quote.terms}</DescriptionDetails>
-            </>
-          )}
-        </DescriptionList>
-      </div>
+        {quote.terms && (
+          <>
+            <DescriptionTerm>Terms & conditions</DescriptionTerm>
+            <DescriptionDetails className="whitespace-pre-wrap">{quote.terms}</DescriptionDetails>
+          </>
+        )}
+      </DescriptionList>
 
-      {/* Line Items Section */}
       {quote.lineItems.length > 0 && (
-        <div className="mb-8">
-          <Heading level={2}>Line Items ({quote.lineItems.length})</Heading>
-          <div className="mt-4 rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Product</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Quantity</TableCell>
-                  <TableCell>Unit Price</TableCell>
-                  <TableCell>Discount</TableCell>
-                  <TableCell>Total</TableCell>
+        <>
+          <Divider className="my-10" soft />
+          <Subheading>Line items</Subheading>
+          <Table className="mt-4 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
+            <TableHead>
+              <TableRow>
+                <TableHeader>Product</TableHeader>
+                <TableHeader>Description</TableHeader>
+                <TableHeader>Qty</TableHeader>
+                <TableHeader>Unit price</TableHeader>
+                <TableHeader>Discount</TableHeader>
+                <TableHeader>Total</TableHeader>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {quote.lineItems.map((line) => (
+                <TableRow
+                  key={line.id}
+                  href={`/products/${line.product.id}`}
+                  title={line.product.name}
+                >
+                  <TableCell>
+                    <div className="font-medium">{line.product.name}</div>
+                    <div className="text-sm text-zinc-500">{line.product.manufacturer.name}</div>
+                  </TableCell>
+                  <TableCell className="text-zinc-500">{line.description || '-'}</TableCell>
+                  <TableCell className="text-zinc-500">{line.quantity}</TableCell>
+                  <TableCell className="text-zinc-500">
+                    ${Number(line.unitPrice).toFixed(2)}
+                  </TableCell>
+                  <TableCell className="text-zinc-500">
+                    {line.discount ? `${Number(line.discount)}%` : '-'}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    ${Number(line.lineTotal).toFixed(2)}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {quote.lineItems.map((line) => (
-                  <TableRow key={line.id}>
-                    <TableCell>
-                      <Link href={`/products/${line.product.id}`}>
-                        {line.product.name}
-                      </Link>
-                      <div className="text-sm text-zinc-500">{line.product.manufacturer.name}</div>
-                    </TableCell>
-                    <TableCell>{line.description || '-'}</TableCell>
-                    <TableCell>{line.quantity}</TableCell>
-                    <TableCell>
-                      ${Number(line.unitPrice).toFixed(2)}
-                    </TableCell>
-                    <TableCell>
-                      {line.discount ? `${Number(line.discount)}%` : '-'}
-                    </TableCell>
-                    <TableCell>
-                      ${Number(line.lineTotal).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+              ))}
+            </TableBody>
+          </Table>
 
-          {/* Totals */}
-          <div className="mt-4 flex justify-end">
-            <div className="w-full max-w-md space-y-2 rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="mt-6 flex justify-end">
+            <dl className="w-full max-w-xs space-y-3 text-sm">
               <div className="flex justify-between">
-                <Text>Subtotal:</Text>
-                <Text>${Number(quote.subtotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
+                <dt className="text-zinc-500">Subtotal</dt>
+                <dd>${Number(quote.subtotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
               </div>
               {quote.discount && (
                 <div className="flex justify-between">
-                  <Text>Discount:</Text>
-                  <Text>-${Number(quote.discount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
+                  <dt className="text-zinc-500">Discount</dt>
+                  <dd>-${Number(quote.discount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                 </div>
               )}
               {quote.tax && (
                 <div className="flex justify-between">
-                  <Text>Tax:</Text>
-                  <Text>${Number(quote.tax).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
+                  <dt className="text-zinc-500">Tax</dt>
+                  <dd>${Number(quote.tax).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
                 </div>
               )}
-              <div className="flex justify-between border-t border-zinc-200 pt-2 dark:border-zinc-800">
-                <Text className="font-semibold">Total:</Text>
-                <Text className="font-semibold">${Number(quote.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
+              <Divider soft />
+              <div className="flex justify-between font-semibold">
+                <dt>Total</dt>
+                <dd>${Number(quote.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</dd>
               </div>
-            </div>
+            </dl>
           </div>
-        </div>
+        </>
       )}
 
-      {/* File Attachments */}
-      <div className="mt-8">
-        <FileAttachments entityType="quote" entityId={quote.id} files={files} />
-      </div>
+      <Divider className="my-10" soft />
 
-      {/* Activities Timeline */}
-      <div className="mt-8">
-        <div className="flex items-center justify-between mb-4">
-          <Heading level={2}>Activities</Heading>
-          <Button href={`/activities/new?quoteId=${quote.id}`}>Log Activity</Button>
-        </div>
+      <FileAttachments entityType="quote" entityId={quote.id} files={files} />
+
+      <Divider className="my-10" soft />
+
+      <section className="flex items-end justify-between gap-4">
+        <Subheading>Activities</Subheading>
+        <Button className="-my-0.5" href={`/activities/new?quoteId=${quote.id}`}>
+          Log Activity
+        </Button>
+      </section>
+      <div className="mt-4">
         <ActivityTimeline type="quote" id={quote.id} />
       </div>
-    </div>
+    </>
   )
 }
 

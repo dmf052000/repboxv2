@@ -6,6 +6,7 @@ import { productSchema, type ProductInput } from '@/lib/validations/product'
 import { createProduct, updateProduct } from '@/actions/products'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Field, Fieldset, Label, ErrorMessage } from '@/components/ui/fieldset'
 import { Checkbox, CheckboxField } from '@/components/ui/checkbox'
 import { Textarea } from '@/components/ui/textarea'
@@ -66,9 +67,8 @@ export function ProductForm({ product, manufacturers }: ProductFormProps) {
 
         <Field>
           <Label>Manufacturer *</Label>
-          <select
+          <Select
             {...form.register('manufacturerId')}
-            className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800"
             data-invalid={!!form.formState.errors.manufacturerId}
           >
             <option value="">Select a manufacturer</option>
@@ -77,7 +77,7 @@ export function ProductForm({ product, manufacturers }: ProductFormProps) {
                 {manufacturer.name}
               </option>
             ))}
-          </select>
+          </Select>
           {form.formState.errors.manufacturerId && (
             <ErrorMessage>{form.formState.errors.manufacturerId.message}</ErrorMessage>
           )}

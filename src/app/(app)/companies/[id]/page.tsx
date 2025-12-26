@@ -2,13 +2,19 @@ import { getCompany } from '@/actions/companies'
 import { notFound } from 'next/navigation'
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@/components/ui/description-list'
 import { Button } from '@/components/ui/button'
-import { Heading } from '@/components/ui/heading'
+import { Heading, Subheading } from '@/components/ui/heading'
 import { Text } from '@/components/ui/text'
 import { Link } from '@/components/ui/link'
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
+import { Divider } from '@/components/ui/divider'
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeader,
+} from '@/components/ui/table'
 import { ActivityTimeline } from '@/components/features/activity-timeline'
-import { FileAttachments } from '@/components/features/file-attachments'
-import { getFileAttachments } from '@/actions/file-attachments'
 
 export default async function CompanyDetailPage({ params }: { params: { id: string } }) {
   const company = await getCompany(params.id)
@@ -22,112 +28,106 @@ export default async function CompanyDetailPage({ params }: { params: { id: stri
     .join(', ')
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
+    <>
+      <div className="flex items-end justify-between gap-4">
         <div>
           <Heading>{company.name}</Heading>
           {company.industry && <Text className="mt-1 text-zinc-500">{company.industry}</Text>}
         </div>
-        <div className="flex gap-3">
-          <Button href={`/companies/${company.id}/edit`}>Edit</Button>
-          <Button plain href="/companies">
-            Back to Companies
-          </Button>
-        </div>
+        <Button className="-my-0.5" href={`/companies/${company.id}/edit`}>
+          Edit
+        </Button>
       </div>
 
-      <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900 mb-8">
-        <DescriptionList>
-          <DescriptionTerm>Company Name</DescriptionTerm>
-          <DescriptionDetails>{company.name}</DescriptionDetails>
+      <DescriptionList className="mt-10">
+        <DescriptionTerm>Company name</DescriptionTerm>
+        <DescriptionDetails>{company.name}</DescriptionDetails>
 
-          {company.website && (
-            <>
-              <DescriptionTerm>Website</DescriptionTerm>
-              <DescriptionDetails>
-                <Link href={company.website} target="_blank" rel="noopener noreferrer">
-                  {company.website}
-                </Link>
-              </DescriptionDetails>
-            </>
-          )}
+        {company.website && (
+          <>
+            <DescriptionTerm>Website</DescriptionTerm>
+            <DescriptionDetails>
+              <Link href={company.website} target="_blank" rel="noopener noreferrer">
+                {company.website}
+              </Link>
+            </DescriptionDetails>
+          </>
+        )}
 
-          {company.phone && (
-            <>
-              <DescriptionTerm>Phone</DescriptionTerm>
-              <DescriptionDetails>
-                <Link href={`tel:${company.phone}`}>{company.phone}</Link>
-              </DescriptionDetails>
-            </>
-          )}
+        {company.phone && (
+          <>
+            <DescriptionTerm>Phone</DescriptionTerm>
+            <DescriptionDetails>
+              <Link href={`tel:${company.phone}`}>{company.phone}</Link>
+            </DescriptionDetails>
+          </>
+        )}
 
-          {company.industry && (
-            <>
-              <DescriptionTerm>Industry</DescriptionTerm>
-              <DescriptionDetails>{company.industry}</DescriptionDetails>
-            </>
-          )}
+        {company.industry && (
+          <>
+            <DescriptionTerm>Industry</DescriptionTerm>
+            <DescriptionDetails>{company.industry}</DescriptionDetails>
+          </>
+        )}
 
-          {addressParts && (
-            <>
-              <DescriptionTerm>Address</DescriptionTerm>
-              <DescriptionDetails>{addressParts}</DescriptionDetails>
-            </>
-          )}
-        </DescriptionList>
-      </div>
+        {addressParts && (
+          <>
+            <DescriptionTerm>Address</DescriptionTerm>
+            <DescriptionDetails>{addressParts}</DescriptionDetails>
+          </>
+        )}
+      </DescriptionList>
 
-      {/* Contacts Section */}
       {company.contacts.length > 0 && (
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <Heading level={2}>Contacts ({company.contacts.length})</Heading>
-            <Button href={`/contacts/new?companyId=${company.id}`}>Add Contact</Button>
-          </div>
-          <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Phone</TableCell>
+        <>
+          <Divider className="my-10" soft />
+          <section className="flex items-end justify-between gap-4">
+            <Subheading>Contacts</Subheading>
+            <Button className="-my-0.5" href={`/contacts/new?companyId=${company.id}`}>
+              Add Contact
+            </Button>
+          </section>
+          <Table className="mt-4 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
+            <TableHead>
+              <TableRow>
+                <TableHeader>Name</TableHeader>
+                <TableHeader>Title</TableHeader>
+                <TableHeader>Email</TableHeader>
+                <TableHeader>Phone</TableHeader>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {company.contacts.map((contact) => (
+                <TableRow
+                  key={contact.id}
+                  href={`/contacts/${contact.id}`}
+                  title={`${contact.firstName} ${contact.lastName}`}
+                >
+                  <TableCell className="font-medium">
+                    {contact.firstName} {contact.lastName}
+                  </TableCell>
+                  <TableCell className="text-zinc-500">{contact.title || '-'}</TableCell>
+                  <TableCell className="text-zinc-500">{contact.email || '-'}</TableCell>
+                  <TableCell className="text-zinc-500">{contact.phone || '-'}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {company.contacts.map((contact) => (
-                  <TableRow key={contact.id}>
-                    <TableCell>
-                      <Link href={`/contacts/${contact.id}`}>
-                        {contact.firstName} {contact.lastName}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{contact.title || '-'}</TableCell>
-                    <TableCell>{contact.email || '-'}</TableCell>
-                    <TableCell>{contact.phone || '-'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+              ))}
+            </TableBody>
+          </Table>
+        </>
       )}
 
-      {/* Placeholder for opportunities - Phase 3 */}
-      <div className="mb-8">
-        <Heading level={2}>Opportunities</Heading>
-        <Text className="mt-2 text-zinc-500">Opportunities will be added in Phase 3</Text>
-      </div>
+      <Divider className="my-10" soft />
 
-      {/* Activities Timeline */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <Heading level={2}>Activities</Heading>
-          <Button href={`/activities/new?companyId=${company.id}`}>Log Activity</Button>
-        </div>
+      <section className="flex items-end justify-between gap-4">
+        <Subheading>Activities</Subheading>
+        <Button className="-my-0.5" href={`/activities/new?companyId=${company.id}`}>
+          Log Activity
+        </Button>
+      </section>
+      <div className="mt-4">
         <ActivityTimeline type="company" id={company.id} />
       </div>
-    </div>
+    </>
   )
 }
 
