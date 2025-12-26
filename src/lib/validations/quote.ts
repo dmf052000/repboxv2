@@ -15,3 +15,5 @@ export const quoteSchema = z.object({
 
 export type QuoteInput = z.infer<typeof quoteSchema>
 
+
+

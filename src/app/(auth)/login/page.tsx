@@ -1,11 +1,11 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Field, Fieldset, Label } from '@/components/ui/fieldset'
+import { Field, Label } from '@/components/ui/fieldset'
 import { Heading } from '@/components/ui/heading'
 import { Input } from '@/components/ui/input'
-import { Text } from '@/components/ui/text'
-import { Link } from '@/components/ui/link'
+import { Text, TextLink, Strong } from '@/components/ui/text'
+import { Logo } from '@/components/ui/logo'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, Suspense } from 'react'
@@ -57,10 +57,8 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="grid w-full max-w-sm grid-cols-1 gap-8">
-      <div>
-        <Heading>RepBox</Heading>
-        <Heading level={2} className="mt-2">Sign in to your account</Heading>
-      </div>
+      <Logo className="h-6 w-6 text-zinc-950 dark:text-white" />
+      <Heading>Sign in to your account</Heading>
 
       {error && (
         <div className="rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-200">
@@ -68,41 +66,36 @@ function LoginForm() {
         </div>
       )}
 
-      <Fieldset>
-        <Field>
-          <Label>Tenant Subdomain</Label>
-          <Input
-            type="text"
-            name="tenantId"
-            defaultValue={tenantId}
-            required
-            placeholder="Enter your tenant subdomain"
-          />
-          <Text className="mt-1 text-xs text-zinc-500">
-            Enter the subdomain you used during signup (e.g., "test" or "your-company")
-          </Text>
-        </Field>
+      <Field>
+        <Label>Workspace</Label>
+        <Input
+          type="text"
+          name="tenantId"
+          defaultValue={tenantId}
+          required
+          placeholder="your-company"
+        />
+      </Field>
 
-        <Field>
-          <Label>Email</Label>
-          <Input type="email" name="email" required autoComplete="email" />
-        </Field>
+      <Field>
+        <Label>Email</Label>
+        <Input type="email" name="email" required autoComplete="email" />
+      </Field>
 
-        <Field>
-          <Label>Password</Label>
-          <Input type="password" name="password" required autoComplete="current-password" />
-        </Field>
+      <Field>
+        <Label>Password</Label>
+        <Input type="password" name="password" required autoComplete="current-password" />
+      </Field>
 
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Signing in...' : 'Sign in'}
-        </Button>
-      </Fieldset>
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? 'Signing in...' : 'Sign in'}
+      </Button>
 
       <Text>
-        Don't have an account?{' '}
-        <Link href="/signup">
-          <strong>Sign up</strong>
-        </Link>
+        Don&apos;t have an account?{' '}
+        <TextLink href="/signup">
+          <Strong>Sign up</Strong>
+        </TextLink>
       </Text>
     </form>
   )

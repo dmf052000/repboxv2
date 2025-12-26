@@ -236,3 +236,5 @@ export function QuotePDF({ quote }: QuotePDFProps) {
   )
 }
 
+
+

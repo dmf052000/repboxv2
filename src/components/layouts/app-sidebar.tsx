@@ -20,11 +20,15 @@ import {
   SidebarSection,
   SidebarSpacer,
 } from '@/components/ui/sidebar'
+import { Logo } from '@/components/ui/logo'
 import {
   ArrowRightStartOnRectangleIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   Cog8ToothIcon,
+  LightBulbIcon,
+  PlusIcon,
+  ShieldCheckIcon,
   UserCircleIcon,
 } from '@heroicons/react/16/solid'
 import {
@@ -35,13 +39,41 @@ import {
   HomeIcon,
   IdentificationIcon,
   InboxIcon,
+  QuestionMarkCircleIcon,
   ShoppingCartIcon,
+  SparklesIcon,
+  Square2StackIcon,
   TicketIcon,
   TruckIcon,
   UserGroupIcon,
   WalletIcon,
 } from '@heroicons/react/20/solid'
 import { usePathname } from 'next/navigation'
+
+function AccountDropdownMenu({ anchor }: { anchor: 'top start' | 'bottom end' }) {
+  return (
+    <DropdownMenu className="min-w-64" anchor={anchor}>
+      <DropdownItem href="/settings">
+        <UserCircleIcon />
+        <DropdownLabel>My account</DropdownLabel>
+      </DropdownItem>
+      <DropdownDivider />
+      <DropdownItem href="#">
+        <ShieldCheckIcon />
+        <DropdownLabel>Privacy policy</DropdownLabel>
+      </DropdownItem>
+      <DropdownItem href="#">
+        <LightBulbIcon />
+        <DropdownLabel>Share feedback</DropdownLabel>
+      </DropdownItem>
+      <DropdownDivider />
+      <DropdownItem href="/api/auth/signout">
+        <ArrowRightStartOnRectangleIcon />
+        <DropdownLabel>Sign out</DropdownLabel>
+      </DropdownItem>
+    </DropdownMenu>
+  )
+}
 
 interface AppSidebarProps {
   user?: {
@@ -57,21 +89,37 @@ export function AppSidebar({ user }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader>
-        <SidebarItem href="/dashboard">
-          <SidebarLabel className="text-lg font-semibold">RepBox</SidebarLabel>
-        </SidebarItem>
+        <Dropdown>
+          <DropdownButton as={SidebarItem}>
+            <Logo className="size-6" />
+            <SidebarLabel>RepBox</SidebarLabel>
+            <ChevronDownIcon />
+          </DropdownButton>
+          <DropdownMenu className="min-w-80 lg:min-w-64" anchor="bottom start">
+            <DropdownItem href="/settings">
+              <Cog8ToothIcon />
+              <DropdownLabel>Settings</DropdownLabel>
+            </DropdownItem>
+            <DropdownDivider />
+            <DropdownItem href="#">
+              <Avatar slot="icon" initials="RB" className="bg-indigo-500 text-white" />
+              <DropdownLabel>RepBox CRM</DropdownLabel>
+            </DropdownItem>
+            <DropdownDivider />
+            <DropdownItem href="#">
+              <PlusIcon />
+              <DropdownLabel>New workspace&hellip;</DropdownLabel>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </SidebarHeader>
 
       <SidebarBody>
         <SidebarSection>
           <SidebarItem href="/dashboard" current={pathname === '/dashboard'}>
             <HomeIcon />
-            <SidebarLabel>Dashboard</SidebarLabel>
+            <SidebarLabel>Home</SidebarLabel>
           </SidebarItem>
-        </SidebarSection>
-
-        <SidebarSection>
-          <SidebarHeading>CRM</SidebarHeading>
           <SidebarItem href="/contacts" current={pathname.startsWith('/contacts')}>
             <UserGroupIcon />
             <SidebarLabel>Contacts</SidebarLabel>
@@ -88,57 +136,53 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <ShoppingCartIcon />
             <SidebarLabel>Quotes</SidebarLabel>
           </SidebarItem>
-        </SidebarSection>
-
-        <SidebarSection>
-          <SidebarHeading>Products</SidebarHeading>
           <SidebarItem href="/manufacturers" current={pathname.startsWith('/manufacturers')}>
             <TruckIcon />
             <SidebarLabel>Manufacturers</SidebarLabel>
           </SidebarItem>
           <SidebarItem href="/products" current={pathname.startsWith('/products')}>
-            <IdentificationIcon />
+            <Square2StackIcon />
             <SidebarLabel>Products</SidebarLabel>
-          </SidebarItem>
-        </SidebarSection>
-
-        <SidebarSection>
-          <SidebarHeading>Rep Management</SidebarHeading>
-          <SidebarItem href="/line-cards" current={pathname.startsWith('/line-cards')}>
-            <InboxIcon />
-            <SidebarLabel>Line Cards</SidebarLabel>
-          </SidebarItem>
-          <SidebarItem href="/territories" current={pathname.startsWith('/territories')}>
-            <ChartBarIcon />
-            <SidebarLabel>Territories</SidebarLabel>
           </SidebarItem>
           <SidebarItem href="/commissions" current={pathname.startsWith('/commissions')}>
             <WalletIcon />
             <SidebarLabel>Commissions</SidebarLabel>
           </SidebarItem>
+          <SidebarItem href="/settings" current={pathname.startsWith('/settings')}>
+            <Cog6ToothIcon />
+            <SidebarLabel>Settings</SidebarLabel>
+          </SidebarItem>
         </SidebarSection>
 
-        <SidebarSection>
-          <SidebarItem href="/activities" current={pathname.startsWith('/activities')}>
-            <InboxIcon />
-            <SidebarLabel>Activities</SidebarLabel>
+        <SidebarSection className="max-lg:hidden">
+          <SidebarHeading>Quick Links</SidebarHeading>
+          <SidebarItem href="/line-cards">
+            Line Cards
           </SidebarItem>
-          <SidebarItem href="/import" current={pathname.startsWith('/import')}>
-            <ArrowUpTrayIcon />
-            <SidebarLabel>Import</SidebarLabel>
+          <SidebarItem href="/territories">
+            Territories
           </SidebarItem>
-          <SidebarItem href="/reports" current={pathname.startsWith('/reports')}>
-            <ChartBarIcon />
-            <SidebarLabel>Reports</SidebarLabel>
+          <SidebarItem href="/activities">
+            Activities
+          </SidebarItem>
+          <SidebarItem href="/reports">
+            Reports
+          </SidebarItem>
+          <SidebarItem href="/import">
+            Import Data
           </SidebarItem>
         </SidebarSection>
 
         <SidebarSpacer />
 
         <SidebarSection>
-          <SidebarItem href="/settings" current={pathname.startsWith('/settings')}>
-            <Cog6ToothIcon />
-            <SidebarLabel>Settings</SidebarLabel>
+          <SidebarItem href="#">
+            <QuestionMarkCircleIcon />
+            <SidebarLabel>Support</SidebarLabel>
+          </SidebarItem>
+          <SidebarItem href="#">
+            <SparklesIcon />
+            <SidebarLabel>Changelog</SidebarLabel>
           </SidebarItem>
         </SidebarSection>
       </SidebarBody>
@@ -148,7 +192,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
           <Dropdown>
             <DropdownButton as={SidebarItem}>
               <span className="flex min-w-0 items-center gap-3">
-                <Avatar src={user.image || undefined} className="size-10" square alt={user.name || ''} />
+                <Avatar src={user.image || undefined} className="size-10" square alt="" />
                 <span className="min-w-0">
                   <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
                     {user.name || 'User'}
@@ -160,17 +204,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
               </span>
               <ChevronUpIcon />
             </DropdownButton>
-            <DropdownMenu className="min-w-64" anchor="top start">
-              <DropdownItem href="/settings/profile">
-                <UserCircleIcon />
-                <DropdownLabel>My account</DropdownLabel>
-              </DropdownItem>
-              <DropdownDivider />
-              <DropdownItem href="/api/auth/signout">
-                <ArrowRightStartOnRectangleIcon />
-                <DropdownLabel>Sign out</DropdownLabel>
-              </DropdownItem>
-            </DropdownMenu>
+            <AccountDropdownMenu anchor="top start" />
           </Dropdown>
         </SidebarFooter>
       )}

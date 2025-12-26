@@ -1,13 +1,17 @@
 import { getReports } from '@/actions/reports'
 import { Button } from '@/components/ui/button'
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Heading } from '@/components/ui/heading'
-import { Text } from '@/components/ui/text'
 import { Badge } from '@/components/ui/badge'
-import { deleteReport } from '@/actions/reports'
-import { DeleteButtonWrapper } from '@/components/features/delete-button-wrapper'
 
-const typeColors: Record<string, string> = {
+const typeColors: Record<string, 'green' | 'blue' | 'indigo' | 'purple' | 'orange' | 'pink' | 'cyan' | 'zinc'> = {
   COMMISSION: 'green',
   OPPORTUNITY: 'blue',
   PIPELINE: 'indigo',
@@ -22,72 +26,55 @@ export default async function ReportsPage() {
   const reports = await getReports()
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <Heading>Reports</Heading>
-          <Text className="mt-1">Create and manage custom reports.</Text>
-        </div>
-        <Button href="/reports/new">Create Report</Button>
+    <>
+      <div className="flex items-end justify-between gap-4">
+        <Heading>Reports</Heading>
+        <Button className="-my-0.5" href="/reports/new">
+          Create report
+        </Button>
       </div>
 
       {reports.length === 0 ? (
-        <div className="rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
-          <Text className="text-zinc-500">No reports yet. Create your first report to get started.</Text>
-          <Button href="/reports/new" className="mt-4">
-            Create Report
-          </Button>
+        <div className="mt-8 text-center text-zinc-500">
+          No reports yet. Create your first report to get started.
         </div>
       ) : (
-        <Table>
+        <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Last Run</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableHeader>Name</TableHeader>
+              <TableHeader>Type</TableHeader>
+              <TableHeader>Last run</TableHeader>
             </TableRow>
           </TableHead>
           <TableBody>
             {reports.map((report) => (
-              <TableRow key={report.id}>
+              <TableRow
+                key={report.id}
+                href={`/reports/${report.id}`}
+                title={report.name}
+              >
+                <TableCell className="font-medium">{report.name}</TableCell>
                 <TableCell>
-                  <div className="font-medium">{report.name}</div>
-                </TableCell>
-                <TableCell>
-                  <Badge color={typeColors[report.type] as any}>
+                  <Badge color={typeColors[report.type] || 'zinc'}>
                     {report.type}
                   </Badge>
                 </TableCell>
-                <TableCell>
-                  <Text className="text-sm text-zinc-500">
-                    {report.description || '-'}
-                  </Text>
-                </TableCell>
-                <TableCell>
+                <TableCell className="text-zinc-500">
                   {report.lastRunAt
-                    ? new Date(report.lastRunAt).toLocaleString()
+                    ? new Date(report.lastRunAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })
                     : 'Never'}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Button plain href={`/reports/${report.id}`}>
-                      View
-                    </Button>
-                    <DeleteButtonWrapper
-                      itemName={report.name}
-                      deleteAction={deleteReport}
-                      id={report.id}
-                    />
-                  </div>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       )}
-    </div>
+    </>
   )
 }
 

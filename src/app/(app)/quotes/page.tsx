@@ -1,13 +1,17 @@
 import { getQuotes } from '@/actions/quotes'
 import { Button } from '@/components/ui/button'
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Heading } from '@/components/ui/heading'
-import { Text } from '@/components/ui/text'
 import { Badge } from '@/components/ui/badge'
-import { deleteQuote } from '@/actions/quotes'
-import { DeleteButtonWrapper } from '@/components/features/delete-button-wrapper'
 
-const statusColors: Record<string, string> = {
+const statusColors: Record<string, 'zinc' | 'blue' | 'indigo' | 'green' | 'red' | 'orange'> = {
   DRAFT: 'zinc',
   SENT: 'blue',
   VIEWED: 'indigo',
@@ -29,109 +33,56 @@ export default async function QuotesPage() {
   const quotes = await getQuotes()
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <Heading>Quotes</Heading>
-          <Text className="mt-1">Manage your quotes and proposals.</Text>
-        </div>
-        <Button href="/quotes/new">Add Quote</Button>
+    <>
+      <div className="flex items-end justify-between gap-4">
+        <Heading>Quotes</Heading>
+        <Button className="-my-0.5" href="/quotes/new">
+          Create quote
+        </Button>
       </div>
 
       {quotes.length === 0 ? (
-        <div className="rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
-          <Text className="text-zinc-500">No quotes yet. Create your first quote to get started.</Text>
-          <Button href="/quotes/new" className="mt-4">
-            Add Quote
-          </Button>
+        <div className="mt-8 text-center text-zinc-500">
+          No quotes yet. Create your first quote to get started.
         </div>
       ) : (
-        <Table>
+        <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
           <TableHead>
             <TableRow>
-              <TableCell>Quote Number</TableCell>
-              <TableCell>Company</TableCell>
-              <TableCell>Contact</TableCell>
-              <TableCell>Opportunity</TableCell>
-              <TableCell>Total</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Valid Until</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableHeader>Quote number</TableHeader>
+              <TableHeader>Company</TableHeader>
+              <TableHeader>Status</TableHeader>
+              <TableHeader className="text-right">Total</TableHeader>
             </TableRow>
           </TableHead>
           <TableBody>
             {quotes.map((quote) => (
-              <TableRow key={quote.id}>
-                <TableCell>
-                  <div className="font-medium">{quote.quoteNumber}</div>
+              <TableRow
+                key={quote.id}
+                href={`/quotes/${quote.id}`}
+                title={`Quote ${quote.quoteNumber}`}
+              >
+                <TableCell className="font-medium">{quote.quoteNumber}</TableCell>
+                <TableCell className="text-zinc-500">
+                  {quote.company?.name || '-'}
                 </TableCell>
                 <TableCell>
-                  {quote.company ? (
-                    <a
-                      href={`/companies/${quote.company.id}`}
-                      className="hover:underline text-blue-600 dark:text-blue-400"
-                    >
-                      {quote.company.name}
-                    </a>
-                  ) : (
-                    '-'
-                  )}
-                </TableCell>
-                <TableCell>
-                  {quote.contact ? (
-                    <a
-                      href={`/contacts/${quote.contact.id}`}
-                      className="hover:underline text-blue-600 dark:text-blue-400"
-                    >
-                      {quote.contact.firstName} {quote.contact.lastName}
-                    </a>
-                  ) : (
-                    '-'
-                  )}
-                </TableCell>
-                <TableCell>
-                  {quote.opportunity ? (
-                    <a
-                      href={`/opportunities/${quote.opportunity.id}`}
-                      className="hover:underline text-blue-600 dark:text-blue-400"
-                    >
-                      {quote.opportunity.name}
-                    </a>
-                  ) : (
-                    '-'
-                  )}
-                </TableCell>
-                <TableCell>
-                  ${Number(quote.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </TableCell>
-                <TableCell>
-                  <Badge color={statusColors[quote.status] as any}>
-                    {statusLabels[quote.status]}
+                  <Badge color={statusColors[quote.status] || 'zinc'}>
+                    {statusLabels[quote.status] || quote.status}
                   </Badge>
                 </TableCell>
-                <TableCell>
-                  {quote.validUntil
-                    ? new Date(quote.validUntil).toLocaleDateString()
-                    : '-'}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Button plain href={`/quotes/${quote.id}`}>
-                      View
-                    </Button>
-                    <DeleteButtonWrapper
-                      itemName={quote.quoteNumber}
-                      deleteAction={deleteQuote}
-                      id={quote.id}
-                    />
-                  </div>
+                <TableCell className="text-right">
+                  ${Number(quote.total).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       )}
-    </div>
+    </>
   )
 }
 

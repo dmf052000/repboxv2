@@ -12,3 +12,5 @@ export const manufacturerSchema = z.object({
 
 export type ManufacturerInput = z.infer<typeof manufacturerSchema>
 
+
+

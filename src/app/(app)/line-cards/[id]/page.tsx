@@ -119,3 +119,5 @@ export default async function LineCardDetailPage({ params }: { params: { id: str
   )
 }
 
+
+

@@ -1,83 +1,62 @@
 import { getProducts } from '@/actions/products'
 import { Button } from '@/components/ui/button'
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Heading } from '@/components/ui/heading'
-import { Text } from '@/components/ui/text'
-import { deleteProduct } from '@/actions/products'
-import { DeleteButtonWrapper } from '@/components/features/delete-button-wrapper'
 
 export default async function ProductsPage() {
   const products = await getProducts()
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <Heading>Products</Heading>
-          <Text className="mt-1">Manage your products and their information.</Text>
-        </div>
-        <Button href="/products/new">Add Product</Button>
+    <>
+      <div className="flex items-end justify-between gap-4">
+        <Heading>Products</Heading>
+        <Button className="-my-0.5" href="/products/new">
+          Add product
+        </Button>
       </div>
 
       {products.length === 0 ? (
-        <div className="rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
-          <Text className="text-zinc-500">No products yet. Create your first product to get started.</Text>
-          <Button href="/products/new" className="mt-4">
-            Add Product
-          </Button>
+        <div className="mt-8 text-center text-zinc-500">
+          No products yet. Create your first product to get started.
         </div>
       ) : (
-        <Table>
+        <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
           <TableHead>
             <TableRow>
-              <TableCell>Product Name</TableCell>
-              <TableCell>Manufacturer</TableCell>
-              <TableCell>SKU</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableHeader>Name</TableHeader>
+              <TableHeader>Manufacturer</TableHeader>
+              <TableHeader>SKU</TableHeader>
+              <TableHeader className="text-right">Price</TableHeader>
             </TableRow>
           </TableHead>
           <TableBody>
             {products.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>
-                  <div className="font-medium">{product.name}</div>
-                  {product.description && (
-                    <div className="text-sm text-zinc-500 line-clamp-1">{product.description}</div>
-                  )}
+              <TableRow
+                key={product.id}
+                href={`/products/${product.id}`}
+                title={product.name}
+              >
+                <TableCell className="font-medium">{product.name}</TableCell>
+                <TableCell className="text-zinc-500">
+                  {product.manufacturer.name}
                 </TableCell>
-                <TableCell>
-                  <a
-                    href={`/manufacturers/${product.manufacturer.id}`}
-                    className="hover:underline text-blue-600 dark:text-blue-400"
-                  >
-                    {product.manufacturer.name}
-                  </a>
-                </TableCell>
-                <TableCell>{product.sku || '-'}</TableCell>
-                <TableCell>{product.category || '-'}</TableCell>
-                <TableCell>
+                <TableCell className="text-zinc-500">{product.sku || '-'}</TableCell>
+                <TableCell className="text-right">
                   {product.unitPrice ? `$${Number(product.unitPrice).toFixed(2)}` : '-'}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Button plain href={`/products/${product.id}`}>
-                      View
-                    </Button>
-                    <DeleteButtonWrapper
-                      itemName={product.name}
-                      deleteAction={deleteProduct}
-                      id={product.id}
-                    />
-                  </div>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       )}
-    </div>
+    </>
   )
 }
 
