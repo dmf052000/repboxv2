@@ -11,15 +11,24 @@ import {
 } from '@/components/ui/table'
 import { Heading } from '@/components/ui/heading'
 import { PageSkeleton } from '@/components/features/loading/page-skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { UserGroupIcon } from '@heroicons/react/24/outline'
 
 async function ContactsList() {
   const contacts = await getContacts()
 
   if (contacts.length === 0) {
     return (
-      <div className="mt-8 text-center text-zinc-500">
-        No contacts yet. Create your first contact to get started.
-      </div>
+      <EmptyState
+        icon={<UserGroupIcon className="h-8 w-8" />}
+        title="No contacts yet"
+        description="Get started by creating your first contact."
+        action={{
+          label: 'Add contact',
+          href: '/contacts/new',
+        }}
+        className="mt-8"
+      />
     )
   }
 

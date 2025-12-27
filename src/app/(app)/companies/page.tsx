@@ -11,15 +11,24 @@ import {
 } from '@/components/ui/table'
 import { Heading } from '@/components/ui/heading'
 import { PageSkeleton } from '@/components/features/loading/page-skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { BuildingOffice2Icon } from '@heroicons/react/24/outline'
 
 async function CompaniesList() {
   const companies = await getCompanies()
 
   if (companies.length === 0) {
     return (
-      <div className="mt-8 text-center text-zinc-500">
-        No companies yet. Create your first company to get started.
-      </div>
+      <EmptyState
+        icon={<BuildingOffice2Icon className="h-8 w-8" />}
+        title="No companies yet"
+        description="Get started by creating your first company."
+        action={{
+          label: 'Add company',
+          href: '/companies/new',
+        }}
+        className="mt-8"
+      />
     )
   }
 

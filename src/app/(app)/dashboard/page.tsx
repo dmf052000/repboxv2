@@ -13,6 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  CurrencyDollarIcon,
+  TicketIcon,
+  UserGroupIcon,
+  ShoppingCartIcon,
+} from '@heroicons/react/24/outline'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -49,26 +55,30 @@ export default async function DashboardPage() {
           </Select>
         </div>
       </div>
-      <div className="mt-4 grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
         <Stat
           title="Pipeline value"
           value={formatCurrency(Number(stats.pipelineValue))}
           change="+4.5%"
+          icon={<CurrencyDollarIcon className="h-12 w-12" />}
         />
         <Stat
           title="Open opportunities"
           value={stats.totalOpportunities.toLocaleString()}
           change="+12.3%"
+          icon={<TicketIcon className="h-12 w-12" />}
         />
         <Stat
           title="Total contacts"
           value={stats.totalContacts.toLocaleString()}
           change="+8.1%"
+          icon={<UserGroupIcon className="h-12 w-12" />}
         />
         <Stat
           title="Open quotes"
           value={stats.openQuotes.toLocaleString()}
           change="-2.5%"
+          icon={<ShoppingCartIcon className="h-12 w-12" />}
         />
       </div>
 
@@ -85,8 +95,13 @@ export default async function DashboardPage() {
         <TableBody>
           {stats.recentActivities.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center text-zinc-500">
-                No recent activities
+              <TableCell colSpan={4} className="py-12 text-center">
+                <div className="mx-auto max-w-sm">
+                  <p className="text-sm font-medium text-zinc-900 dark:text-white">No recent activities</p>
+                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                    Activities you log will appear here
+                  </p>
+                </div>
               </TableCell>
             </TableRow>
           ) : (

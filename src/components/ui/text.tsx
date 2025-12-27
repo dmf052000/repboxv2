@@ -6,7 +6,7 @@ export function Text({ className, ...props }: React.ComponentPropsWithoutRef<'p'
     <p
       data-slot="text"
       {...props}
-      className={clsx(className, 'text-base/6 text-zinc-500 sm:text-sm/6 dark:text-zinc-400')}
+      className={clsx(className, 'text-base/7 text-zinc-600 sm:text-sm/6 dark:text-zinc-400')}
     />
   )
 }
@@ -17,14 +17,14 @@ export function TextLink({ className, ...props }: React.ComponentPropsWithoutRef
       {...props}
       className={clsx(
         className,
-        'text-zinc-950 underline decoration-zinc-950/50 data-hover:decoration-zinc-950 dark:text-white dark:decoration-white/50 dark:data-hover:decoration-white'
+        'text-blue-600 underline decoration-blue-600/50 data-hover:decoration-blue-600 dark:text-blue-400 dark:decoration-blue-400/50 dark:data-hover:decoration-blue-400'
       )}
     />
   )
 }
 
 export function Strong({ className, ...props }: React.ComponentPropsWithoutRef<'strong'>) {
-  return <strong {...props} className={clsx(className, 'font-medium text-zinc-950 dark:text-white')} />
+  return <strong {...props} className={clsx(className, 'font-semibold text-zinc-900 dark:text-white')} />
 }
 
 export function Code({ className, ...props }: React.ComponentPropsWithoutRef<'code'>) {

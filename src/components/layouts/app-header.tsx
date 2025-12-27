@@ -42,7 +42,7 @@ function AccountDropdownMenu({ anchor }: { anchor: 'top start' | 'bottom end' })
 
 export function AppHeader({ user }: AppHeaderProps) {
   return (
-    <Navbar>
+    <Navbar className="bg-white border-b border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
       <NavbarSpacer />
       <NavbarSection>
         {user && (

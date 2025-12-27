@@ -5,22 +5,30 @@ export function Stat({
   title,
   value,
   change,
+  icon,
 }: {
   title: string
   value: string
   change?: string
+  icon?: React.ReactNode
 }) {
   return (
-    <div>
-      <Divider />
-      <div className="mt-6 text-lg/6 font-medium sm:text-sm/6">{title}</div>
-      <div className="mt-3 text-3xl/8 font-semibold sm:text-2xl/8">{value}</div>
-      {change && (
-        <div className="mt-3 text-sm/6 sm:text-xs/6">
-          <Badge color={change.startsWith('+') ? 'lime' : 'pink'}>{change}</Badge>{' '}
-          <span className="text-zinc-500">from last period</span>
+    <div className="relative overflow-hidden rounded-lg bg-blue-50 p-6 dark:bg-blue-950/20">
+      {icon && (
+        <div className="absolute top-4 right-4 text-blue-600 dark:text-blue-400 opacity-20">
+          {icon}
         </div>
       )}
+      <div className="relative">
+        <div className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{title}</div>
+        <div className="mt-2 text-3xl font-bold text-zinc-900 sm:text-2xl dark:text-white">{value}</div>
+        {change && (
+          <div className="mt-3 flex items-center gap-2 text-sm">
+            <Badge color={change.startsWith('+') ? 'green' : 'red'}>{change}</Badge>
+            <span className="text-zinc-500 dark:text-zinc-400">from last period</span>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

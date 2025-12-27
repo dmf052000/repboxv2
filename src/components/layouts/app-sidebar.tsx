@@ -92,7 +92,9 @@ export function AppSidebar({ user }: AppSidebarProps) {
         <Dropdown>
           <DropdownButton as={SidebarItem}>
             <Logo className="size-6" />
-            <SidebarLabel>RepBox</SidebarLabel>
+            <SidebarLabel className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
+              RepBox
+            </SidebarLabel>
             <ChevronDownIcon />
           </DropdownButton>
           <DropdownMenu className="min-w-80 lg:min-w-64" anchor="bottom start">
@@ -102,7 +104,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
             </DropdownItem>
             <DropdownDivider />
             <DropdownItem href="#">
-              <Avatar slot="icon" initials="RB" className="bg-indigo-500 text-white" />
+              <Avatar slot="icon" initials="RB" className="bg-blue-600 text-white" />
               <DropdownLabel>RepBox CRM</DropdownLabel>
             </DropdownItem>
             <DropdownDivider />
@@ -188,21 +190,21 @@ export function AppSidebar({ user }: AppSidebarProps) {
       </SidebarBody>
 
       {user && (
-        <SidebarFooter className="max-lg:hidden">
+        <SidebarFooter className="max-lg:hidden border-t border-blue-800">
           <Dropdown>
-            <DropdownButton as={SidebarItem}>
+            <DropdownButton as={SidebarItem} className="data-[hover]:bg-blue-700">
               <span className="flex min-w-0 items-center gap-3">
                 <Avatar src={user.image || undefined} className="size-10" square alt="" />
                 <span className="min-w-0">
-                  <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
+                  <span className="block truncate text-sm/5 font-medium text-white">
                     {user.name || 'User'}
                   </span>
-                  <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
+                  <span className="block truncate text-xs/5 font-normal text-blue-300">
                     {user.email || ''}
                   </span>
                 </span>
               </span>
-              <ChevronUpIcon />
+              <ChevronUpIcon className="size-5 fill-blue-300" />
             </DropdownButton>
             <AccountDropdownMenu anchor="top start" />
           </Dropdown>

@@ -9,6 +9,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Heading } from '@/components/ui/heading'
+import { EmptyState } from '@/components/ui/empty-state'
+import { Square2StackIcon } from '@heroicons/react/24/outline'
 
 export default async function ProductsPage() {
   const products = await getProducts()
@@ -23,9 +25,16 @@ export default async function ProductsPage() {
       </div>
 
       {products.length === 0 ? (
-        <div className="mt-8 text-center text-zinc-500">
-          No products yet. Create your first product to get started.
-        </div>
+        <EmptyState
+          icon={<Square2StackIcon className="h-8 w-8" />}
+          title="No products yet"
+          description="Get started by creating your first product."
+          action={{
+            label: 'Add product',
+            href: '/products/new',
+          }}
+          className="mt-8"
+        />
       ) : (
         <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
           <TableHead>

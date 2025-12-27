@@ -10,6 +10,8 @@ import {
 } from '@/components/ui/table'
 import { Heading } from '@/components/ui/heading'
 import { Badge } from '@/components/ui/badge'
+import { EmptyState } from '@/components/ui/empty-state'
+import { ShoppingCartIcon } from '@heroicons/react/24/outline'
 
 const statusColors: Record<string, 'zinc' | 'blue' | 'indigo' | 'green' | 'red' | 'orange'> = {
   DRAFT: 'zinc',
@@ -42,9 +44,16 @@ export default async function QuotesPage() {
       </div>
 
       {quotes.length === 0 ? (
-        <div className="mt-8 text-center text-zinc-500">
-          No quotes yet. Create your first quote to get started.
-        </div>
+        <EmptyState
+          icon={<ShoppingCartIcon className="h-8 w-8" />}
+          title="No quotes yet"
+          description="Get started by creating your first quote."
+          action={{
+            label: 'Create quote',
+            href: '/quotes/new',
+          }}
+          className="mt-8"
+        />
       ) : (
         <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
           <TableHead>

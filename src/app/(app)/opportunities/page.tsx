@@ -10,6 +10,8 @@ import {
 } from '@/components/ui/table'
 import { Heading } from '@/components/ui/heading'
 import { Badge } from '@/components/ui/badge'
+import { EmptyState } from '@/components/ui/empty-state'
+import { TicketIcon } from '@heroicons/react/24/outline'
 
 const stageColors: Record<string, 'zinc' | 'blue' | 'indigo' | 'purple' | 'green' | 'red'> = {
   prospecting: 'zinc',
@@ -42,9 +44,16 @@ export default async function OpportunitiesPage() {
       </div>
 
       {opportunities.length === 0 ? (
-        <div className="mt-8 text-center text-zinc-500">
-          No opportunities yet. Create your first opportunity to get started.
-        </div>
+        <EmptyState
+          icon={<TicketIcon className="h-8 w-8" />}
+          title="No opportunities yet"
+          description="Get started by creating your first opportunity."
+          action={{
+            label: 'Add opportunity',
+            href: '/opportunities/new',
+          }}
+          className="mt-8"
+        />
       ) : (
         <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
           <TableHead>
