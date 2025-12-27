@@ -126,3 +126,5 @@ export default async function ManufacturerDetailPage({ params }: { params: { id:
 
 
 
+
+
