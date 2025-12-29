@@ -197,10 +197,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
               style={{ 
                 backgroundColor: 'transparent',
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={(e: React.MouseEvent<HTMLElement>) => {
                 e.currentTarget.style.backgroundColor = '#2A2F36'
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={(e: React.MouseEvent<HTMLElement>) => {
                 e.currentTarget.style.backgroundColor = 'transparent'
               }}
             >

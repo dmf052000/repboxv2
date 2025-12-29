@@ -130,14 +130,14 @@ export const SidebarItem = forwardRef(function SidebarItem(
           style={{
             backgroundColor: current ? activeBg : 'transparent',
           }}
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
             if (!current) {
               e.currentTarget.style.backgroundColor = hoverBg
             } else {
               e.currentTarget.style.backgroundColor = activeBg
             }
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
             if (!current) {
               e.currentTarget.style.backgroundColor = 'transparent'
             } else {
@@ -156,14 +156,14 @@ export const SidebarItem = forwardRef(function SidebarItem(
           style={{
             backgroundColor: current ? activeBg : 'transparent',
           }}
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
             if (!current) {
               e.currentTarget.style.backgroundColor = hoverBg
             } else {
               e.currentTarget.style.backgroundColor = activeBg
             }
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
             if (!current) {
               e.currentTarget.style.backgroundColor = 'transparent'
             } else {
