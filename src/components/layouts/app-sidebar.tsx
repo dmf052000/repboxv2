@@ -190,21 +190,32 @@ export function AppSidebar({ user }: AppSidebarProps) {
       </SidebarBody>
 
       {user && (
-        <SidebarFooter className="max-lg:hidden border-t border-blue-800">
+        <SidebarFooter className="max-lg:hidden">
           <Dropdown>
-            <DropdownButton as={SidebarItem} className="data-[hover]:bg-blue-700">
+            <DropdownButton 
+              as={SidebarItem} 
+              style={{ 
+                backgroundColor: 'transparent',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#2A2F36'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent'
+              }}
+            >
               <span className="flex min-w-0 items-center gap-3">
                 <Avatar src={user.image || undefined} className="size-10" square alt="" />
                 <span className="min-w-0">
                   <span className="block truncate text-sm/5 font-medium text-white">
                     {user.name || 'User'}
                   </span>
-                  <span className="block truncate text-xs/5 font-normal text-blue-300">
+                  <span className="block truncate text-xs/5 font-normal" style={{ color: '#5DA9FF' }}>
                     {user.email || ''}
                   </span>
                 </span>
               </span>
-              <ChevronUpIcon className="size-5 fill-blue-300" />
+              <ChevronUpIcon className="size-5" style={{ fill: '#5DA9FF' }} />
             </DropdownButton>
             <AccountDropdownMenu anchor="top start" />
           </Dropdown>

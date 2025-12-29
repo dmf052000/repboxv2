@@ -8,7 +8,7 @@ import { TouchTarget } from './button'
 import { Link } from './link'
 
 export function Sidebar({ className, ...props }: React.ComponentPropsWithoutRef<'nav'>) {
-  return <nav {...props} className={clsx(className, 'flex h-full min-h-0 flex-col bg-blue-900 text-white')} />
+  return <nav {...props} className={clsx(className, 'sidebar-nav flex h-full min-h-0 flex-col text-white')} />
 }
 
 export function SidebarHeader({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
@@ -17,8 +17,9 @@ export function SidebarHeader({ className, ...props }: React.ComponentPropsWitho
       {...props}
       className={clsx(
         className,
-        'flex flex-col border-b border-blue-800 p-4 [&>[data-slot=section]+[data-slot=section]]:mt-2.5'
+        'flex flex-col border-b p-4 [&>[data-slot=section]+[data-slot=section]]:mt-2.5'
       )}
+      style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
     />
   )
 }
@@ -41,8 +42,9 @@ export function SidebarFooter({ className, ...props }: React.ComponentPropsWitho
       {...props}
       className={clsx(
         className,
-        'flex flex-col border-t border-blue-800 p-4 [&>[data-slot=section]+[data-slot=section]]:mt-2.5'
+        'flex flex-col border-t p-4 [&>[data-slot=section]+[data-slot=section]]:mt-2.5'
       )}
+      style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
     />
   )
 }
@@ -67,7 +69,7 @@ export function SidebarSpacer({ className, ...props }: React.ComponentPropsWitho
 
 export function SidebarHeading({ className, ...props }: React.ComponentPropsWithoutRef<'h3'>) {
   return (
-    <h3 {...props} className={clsx(className, 'mb-1 px-2 text-xs/6 font-medium text-blue-300')} />
+    <h3 {...props} className={clsx(className, 'mb-1 px-2 text-xs/6 font-medium')} style={{ color: '#5DA9FF' }} />
   )
 }
 
@@ -83,34 +85,39 @@ export const SidebarItem = forwardRef(function SidebarItem(
   ),
   ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
 ) {
+  const iconColor = '#5DA9FF'
+  const hoverBg = '#2A2F36'
+  const activeBg = '#2A2F36'
+  
   let classes = clsx(
     // Base
     'flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left text-base/6 font-medium text-white sm:py-2 sm:text-sm/5',
-    // Leading icon/icon-only
-    '*:data-[slot=icon]:size-6 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:fill-blue-300 sm:*:data-[slot=icon]:size-5',
+    // Leading icon/icon-only - default to accent color
+    '*:data-[slot=icon]:size-6 *:data-[slot=icon]:shrink-0 sm:*:data-[slot=icon]:size-5',
     // Trailing icon (down chevron or similar)
     '*:last:data-[slot=icon]:ml-auto *:last:data-[slot=icon]:size-5 sm:*:last:data-[slot=icon]:size-4',
     // Avatar
     '*:data-[slot=avatar]:-m-0.5 *:data-[slot=avatar]:size-7 sm:*:data-[slot=avatar]:size-6',
-    // Hover
-    'data-hover:bg-blue-700 data-hover:*:data-[slot=icon]:fill-white',
-    // Active
-    'data-active:bg-blue-700 data-active:*:data-[slot=icon]:fill-white',
-    // Current
-    'data-current:bg-blue-700 data-current:*:data-[slot=icon]:fill-white',
+    // Hover - icons turn white
+    'data-hover:*:data-[slot=icon]:fill-white',
+    // Active - icons turn white
+    'data-active:*:data-[slot=icon]:fill-white',
+    // Current - icons stay accent color, turn white on hover
+    'data-current:*:data-[slot=icon]:fill-white',
     // Dark mode (simplified as sidebar is always dark)
-    'dark:text-white dark:*:data-[slot=icon]:fill-blue-300',
-    'dark:data-hover:bg-blue-700 dark:data-hover:*:data-[slot=icon]:fill-white',
-    'dark:data-active:bg-blue-700 dark:data-active:*:data-[slot=icon]:fill-white',
-    'dark:data-current:bg-blue-700 dark:data-current:*:data-[slot=icon]:fill-white'
+    'dark:text-white',
+    'dark:data-hover:*:data-[slot=icon]:fill-white',
+    'dark:data-active:*:data-[slot=icon]:fill-white',
+    'dark:data-current:*:data-[slot=icon]:fill-white'
   )
-
+  
   return (
-    <span className={clsx(className, 'relative')}>
+    <span className={clsx(className, 'relative group')}>
       {current && (
         <motion.span
           layoutId="current-indicator"
-          className="absolute inset-y-2 -left-4 w-0.5 rounded-full bg-blue-300"
+          className="absolute inset-y-2 -left-4 w-0.5 rounded-full"
+          style={{ backgroundColor: iconColor }}
         />
       )}
       {typeof props.href === 'string' ? (
@@ -120,6 +127,23 @@ export const SidebarItem = forwardRef(function SidebarItem(
           className={classes}
           data-current={current ? 'true' : undefined}
           ref={ref}
+          style={{
+            backgroundColor: current ? activeBg : 'transparent',
+          }}
+          onMouseEnter={(e) => {
+            if (!current) {
+              e.currentTarget.style.backgroundColor = hoverBg
+            } else {
+              e.currentTarget.style.backgroundColor = activeBg
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!current) {
+              e.currentTarget.style.backgroundColor = 'transparent'
+            } else {
+              e.currentTarget.style.backgroundColor = activeBg
+            }
+          }}
         >
           <TouchTarget>{children}</TouchTarget>
         </Headless.CloseButton>
@@ -129,6 +153,23 @@ export const SidebarItem = forwardRef(function SidebarItem(
           className={clsx('cursor-default', classes)}
           data-current={current ? 'true' : undefined}
           ref={ref}
+          style={{
+            backgroundColor: current ? activeBg : 'transparent',
+          }}
+          onMouseEnter={(e) => {
+            if (!current) {
+              e.currentTarget.style.backgroundColor = hoverBg
+            } else {
+              e.currentTarget.style.backgroundColor = activeBg
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!current) {
+              e.currentTarget.style.backgroundColor = 'transparent'
+            } else {
+              e.currentTarget.style.backgroundColor = activeBg
+            }
+          }}
         >
           <TouchTarget>{children}</TouchTarget>
         </Headless.Button>

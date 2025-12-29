@@ -16,10 +16,34 @@
   --color-blue-800: #1e40af;
   --color-blue-900: #1e3a8a;
   --color-blue-950: #172554;
+  
+  /* Navigation colors */
+  --color-nav-bg: #1E2228;
+  --color-nav-hover: #2A2F36;
+  --color-nav-accent: #5DA9FF;
 }
 
 body {
   font-feature-settings: "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sidebar navigation styles */
+.sidebar-nav {
+  background-color: #1E2228;
+}
+
+.sidebar-nav *[data-slot="icon"] {
+  fill: #5DA9FF;
+}
+
+.sidebar-nav [data-hover]:hover *[data-slot="icon"],
+.sidebar-nav [data-active]:active *[data-slot="icon"],
+.sidebar-nav [data-current="true"]:hover *[data-slot="icon"] {
+  fill: white;
+}
+
+.sidebar-nav [data-current="true"] *[data-slot="icon"] {
+  fill: #5DA9FF;
 }
