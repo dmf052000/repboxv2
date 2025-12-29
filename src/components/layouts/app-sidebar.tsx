@@ -210,12 +210,12 @@ export function AppSidebar({ user }: AppSidebarProps) {
                   <span className="block truncate text-sm/5 font-medium text-white">
                     {user.name || 'User'}
                   </span>
-                  <span className="block truncate text-xs/5 font-normal" style={{ color: '#5DA9FF' }}>
+                  <span className="block truncate text-xs/5 font-normal" style={{ color: '#60B0FF' }}>
                     {user.email || ''}
                   </span>
                 </span>
               </span>
-              <ChevronUpIcon className="size-5" style={{ fill: '#5DA9FF' }} />
+              <ChevronUpIcon className="size-5" style={{ fill: '#60B0FF' }} />
             </DropdownButton>
             <AccountDropdownMenu anchor="top start" />
           </Dropdown>
