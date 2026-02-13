@@ -20,7 +20,7 @@
   /* Navigation colors */
   --color-nav-bg: #1E2228;
   --color-nav-hover: #2A2F36;
-  --color-nav-accent: #60B0FF;
+  --color-nav-accent: white;
 }
 
 body {
@@ -35,7 +35,7 @@ body {
 }
 
 .sidebar-nav *[data-slot="icon"] {
-  fill: #60B0FF;
+  fill: white;
 }
 
 .sidebar-nav [data-hover]:hover *[data-slot="icon"],
@@ -45,5 +45,5 @@ body {
 }
 
 .sidebar-nav [data-current="true"] *[data-slot="icon"] {
-  fill: #60B0FF;
+  fill: white;
 }

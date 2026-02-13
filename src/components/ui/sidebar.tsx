@@ -69,7 +69,7 @@ export function SidebarSpacer({ className, ...props }: React.ComponentPropsWitho
 
 export function SidebarHeading({ className, ...props }: React.ComponentPropsWithoutRef<'h3'>) {
   return (
-    <h3 {...props} className={clsx(className, 'mb-1 px-2 text-xs/6 font-medium')} style={{ color: '#60B0FF' }} />
+    <h3 {...props} className={clsx(className, 'mb-1 px-2 text-xs/6 font-medium')} style={{ color: 'white' }} />
   )
 }
 
@@ -85,7 +85,7 @@ export const SidebarItem = forwardRef(function SidebarItem(
   ),
   ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
 ) {
-  const iconColor = '#60B0FF'
+  const iconColor = 'white'
   const hoverBg = '#2A2F36'
   const activeBg = '#2A2F36'
   
