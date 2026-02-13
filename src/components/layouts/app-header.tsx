@@ -12,7 +12,6 @@ import {
 import { Navbar, NavbarItem, NavbarSection, NavbarSpacer } from '@/components/ui/navbar'
 import {
   ArrowRightStartOnRectangleIcon,
-  Cog8ToothIcon,
   UserCircleIcon,
 } from '@heroicons/react/16/solid'
 
@@ -41,6 +40,13 @@ function AccountDropdownMenu({ anchor }: { anchor: 'top start' | 'bottom end' })
 }
 
 export function AppHeader({ user }: AppHeaderProps) {
+  const initials = user?.name
+    ?.split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2) || 'U'
+
   return (
     <Navbar className="bg-white border-b border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
       <NavbarSpacer />
@@ -48,7 +54,13 @@ export function AppHeader({ user }: AppHeaderProps) {
         {user && (
           <Dropdown>
             <DropdownButton as={NavbarItem}>
-              <Avatar src={user.image || undefined} square alt={user.name || ''} />
+              <Avatar
+                src={user.image || undefined}
+                initials={!user.image ? initials : undefined}
+                square
+                alt={user.name || ''}
+                className="size-8"
+              />
             </DropdownButton>
             <AccountDropdownMenu anchor="bottom end" />
           </Dropdown>

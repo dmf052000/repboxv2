@@ -14,7 +14,6 @@ import {
   SidebarBody,
   SidebarFooter,
   SidebarHeader,
-  SidebarHeading,
   SidebarItem,
   SidebarLabel,
   SidebarSection,
@@ -25,20 +24,15 @@ import {
   ArrowRightStartOnRectangleIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-  Cog8ToothIcon,
   LightBulbIcon,
   PlusIcon,
   ShieldCheckIcon,
   UserCircleIcon,
 } from '@heroicons/react/16/solid'
 import {
-  ArrowUpTrayIcon,
   BuildingOffice2Icon,
-  ChartBarIcon,
   Cog6ToothIcon,
   HomeIcon,
-  IdentificationIcon,
-  InboxIcon,
   QuestionMarkCircleIcon,
   ShoppingCartIcon,
   SparklesIcon,
@@ -99,7 +93,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
           </DropdownButton>
           <DropdownMenu className="min-w-80 lg:min-w-64" anchor="bottom start">
             <DropdownItem href="/settings">
-              <Cog8ToothIcon />
+              <Cog6ToothIcon />
               <DropdownLabel>Settings</DropdownLabel>
             </DropdownItem>
             <DropdownDivider />
@@ -157,22 +151,23 @@ export function AppSidebar({ user }: AppSidebarProps) {
         </SidebarSection>
 
         <SidebarSection className="max-lg:hidden">
-          <SidebarHeading>Quick Links</SidebarHeading>
-          <SidebarItem href="/line-cards">
-            Line Cards
-          </SidebarItem>
-          <SidebarItem href="/territories">
-            Territories
-          </SidebarItem>
-          <SidebarItem href="/activities">
-            Activities
-          </SidebarItem>
-          <SidebarItem href="/reports">
-            Reports
-          </SidebarItem>
-          <SidebarItem href="/import">
-            Import Data
-          </SidebarItem>
+          <div className="border-t border-white/10 pt-2">
+            <SidebarItem href="/line-cards" className="text-sm">
+              <SidebarLabel className="text-zinc-400">Line Cards</SidebarLabel>
+            </SidebarItem>
+            <SidebarItem href="/territories" className="text-sm">
+              <SidebarLabel className="text-zinc-400">Territories</SidebarLabel>
+            </SidebarItem>
+            <SidebarItem href="/activities" className="text-sm">
+              <SidebarLabel className="text-zinc-400">Activities</SidebarLabel>
+            </SidebarItem>
+            <SidebarItem href="/reports" className="text-sm">
+              <SidebarLabel className="text-zinc-400">Reports</SidebarLabel>
+            </SidebarItem>
+            <SidebarItem href="/import" className="text-sm">
+              <SidebarLabel className="text-zinc-400">Import Data</SidebarLabel>
+            </SidebarItem>
+          </div>
         </SidebarSection>
 
         <SidebarSpacer />
