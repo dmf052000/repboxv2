@@ -14,6 +14,7 @@ import {
   SidebarBody,
   SidebarFooter,
   SidebarHeader,
+  SidebarHeading,
   SidebarItem,
   SidebarLabel,
   SidebarSection,
@@ -151,23 +152,22 @@ export function AppSidebar({ user }: AppSidebarProps) {
         </SidebarSection>
 
         <SidebarSection className="max-lg:hidden">
-          <div className="border-t border-white/10 pt-2">
-            <SidebarItem href="/line-cards" className="text-sm">
-              <SidebarLabel className="text-zinc-400">Line Cards</SidebarLabel>
-            </SidebarItem>
-            <SidebarItem href="/territories" className="text-sm">
-              <SidebarLabel className="text-zinc-400">Territories</SidebarLabel>
-            </SidebarItem>
-            <SidebarItem href="/activities" className="text-sm">
-              <SidebarLabel className="text-zinc-400">Activities</SidebarLabel>
-            </SidebarItem>
-            <SidebarItem href="/reports" className="text-sm">
-              <SidebarLabel className="text-zinc-400">Reports</SidebarLabel>
-            </SidebarItem>
-            <SidebarItem href="/import" className="text-sm">
-              <SidebarLabel className="text-zinc-400">Import Data</SidebarLabel>
-            </SidebarItem>
-          </div>
+          <SidebarHeading>Quick Links</SidebarHeading>
+          <SidebarItem href="/line-cards">
+            Line Cards
+          </SidebarItem>
+          <SidebarItem href="/territories">
+            Territories
+          </SidebarItem>
+          <SidebarItem href="/activities">
+            Activities
+          </SidebarItem>
+          <SidebarItem href="/reports">
+            Reports
+          </SidebarItem>
+          <SidebarItem href="/import">
+            Import Data
+          </SidebarItem>
         </SidebarSection>
 
         <SidebarSpacer />
@@ -186,34 +186,25 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
       {user && (
         <SidebarFooter className="max-lg:hidden">
-          <Dropdown>
-            <DropdownButton 
-              as={SidebarItem} 
-              style={{ 
-                backgroundColor: 'transparent',
-              }}
-              onMouseEnter={(e: React.MouseEvent<HTMLElement>) => {
-                e.currentTarget.style.backgroundColor = '#2A2F36'
-              }}
-              onMouseLeave={(e: React.MouseEvent<HTMLElement>) => {
-                e.currentTarget.style.backgroundColor = 'transparent'
-              }}
-            >
-              <span className="flex min-w-0 items-center gap-3">
-                <Avatar src={user.image || undefined} className="size-10" square alt="" />
-                <span className="min-w-0">
-                  <span className="block truncate text-sm/5 font-medium text-white">
-                    {user.name || 'User'}
-                  </span>
-                  <span className="block truncate text-xs/5 font-normal" style={{ color: '#60B0FF' }}>
-                    {user.email || ''}
+          <div className="border-t border-white/10 pt-2">
+            <Dropdown>
+              <DropdownButton as={SidebarItem}>
+                <span className="flex min-w-0 items-center gap-3">
+                  <Avatar src={user.image || undefined} className="size-10" square alt="" />
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
+                      {user.name || 'User'}
+                    </span>
+                    <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
+                      {user.email || ''}
+                    </span>
                   </span>
                 </span>
-              </span>
-              <ChevronUpIcon className="size-5" style={{ fill: '#60B0FF' }} />
-            </DropdownButton>
-            <AccountDropdownMenu anchor="top start" />
-          </Dropdown>
+                <ChevronUpIcon />
+              </DropdownButton>
+              <AccountDropdownMenu anchor="top start" />
+            </Dropdown>
+          </div>
         </SidebarFooter>
       )}
     </Sidebar>
